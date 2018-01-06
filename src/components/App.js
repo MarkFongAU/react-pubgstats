@@ -40,12 +40,12 @@ export default App;
 // https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf FOLLOW THIS
 // https://codesandbox.io/s/vVoQVk78
 
-
-// (Express + React router 4) https://ebaytech.berlin/universal-web-apps-with-react-router-4-15002bb30ccb
+// NOT USEFUL (Express + React router 4) https://ebaytech.berlin/universal-web-apps-with-react-router-4-15002bb30ccb
 // (Tutorial React) http://buildwithreact.com/tutorial/events
-// (React with server) https://www.fullstackreact.com/articles/using-create-react-app-with-a-server/
+// USING THIS (React with server) https://www.fullstackreact.com/articles/using-create-react-app-with-a-server/
 // http://www.material-ui.com/#/components/grid-list (Material UI)
 
+// USEFUL https://medium.com/@patriciolpezjuri/using-create-react-app-with-react-router-express-js-8fa658bf892d
 
 // const express = require('express');
 // const path = require('path');

@@ -7,7 +7,7 @@ import async from 'async'
 import request from 'request'
 
 
-import {PubgAPI, PubgAPIErrors, REGION, SEASON, MATCH} from 'pubg.op.gg'
+// import {PubgAPI, PubgAPIErrors, REGION, SEASON, MATCH} from 'pubg.op.gg'
 
 // Material UI dependencies - Player profile (Card)
 import FlatButton from 'material-ui/FlatButton';
@@ -65,8 +65,6 @@ const divStyles = {
 const playerID = '59fe3604465dcc0001b82b45';
 
 
-
-
 function multipleGetRequest(options, callback) {
     request(options,
         function (err, res, body) {
@@ -87,7 +85,8 @@ class Player extends Component {
                 //     'Accept': 'application/json',
                 // },
                 json: true
-            }
+            },
+            Player: {}
         }
     }
 
@@ -97,6 +96,20 @@ class Player extends Component {
         return option;
     };
 
+    getPlayerStats() {
+        fetch(`/api/users/${playerID}`)
+            .then(res => {
+                return res.json();
+            }).then(data => {
+            // console.log(data.playerProfile);
+            //     return data.playerProfile;
+            this.setState({Player: data.playerProfile});
+        });
+    };
+
+    componentDidMount() {
+        this.getPlayerStats();
+    }
 
     // HandleOnClick = () => {
     //     console.log("here");
@@ -107,50 +120,27 @@ class Player extends Component {
     //     this.props.history.push('/');
     // };
 
-    // state = {
-    //     navigate: false
-    // };
-    //
     render() {
-
-        // PUBG op.gg API: If no Redis configuration it wont be cached
-        const api = new PubgAPI({
-            redisConfig: {
-                host: '127.0.0.1',
-                port: 6379,
-                expiration: 300, // Optional - defaults to 300.
-            },
-        });
-
         // let profileOption = this.profileRequestOptions('users', playerID);
         // console.log(profileOption);
-        // const APIRequests = [profileOption];
-        //
-        // let playerProfile = async.map(APIRequests, multipleGetRequest, function (err, res) {
-        //     if (err) {
-        //         return console.log(err);
-        //     } else {
-        //         console.log(res);
-        //     }
-        //
-        //     return playerProfile = {
-        //         id: res[0].id,
-        //         nickname: res[0].nickname,
-        //         servers: res[0].servers,
-        //         seasons: res[0].seasons,
-        //     };
+
+        // let playerProfile = this.getPlayerStats();
+        // console.log(playerProfile);
+        // fetch('https://randomuser.me/api/?result=500')
+        //     .then(res => {
+        //         return res.json();
+        //     }).then(data => {
+        //     let playerProfile = data.results.map((res) => {
+        //         console.log(res.id.value);
+        //         console.log(res.name.first);
+        //         console.log(res.name.last);
+        //         return playerProfile = {
+        //             id: res.id.value,
+        //             nickname: res.name.first + res.name.last,
+        //         }
+        //     });
+        //     console.log(playerProfile);
         // });
-
-        api.getProfileByID('59fdabfb33bd730001661ad2', SEASON.RE2018sea1, REGION.EU, MATCH.SQUAD.size, MATCH.SQUAD.name)
-            .then((profile) => {
-                const data = profile.getStats();
-                console.log(data);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-
-
 
         return (
             <div>
@@ -171,7 +161,7 @@ class Player extends Component {
                     {/*>*/}
                     {/*<img src="images/nature-600-337.jpg" alt=""/>*/}
                     {/*</CardMedia>*/}
-                    <CardTitle title="sdasd" subtitle="Card subtitle" titleStyle={titleStyles}/>
+                    <CardTitle title={this.state.Player.nickname} subtitle={this.state.Player.id} titleStyle={titleStyles}/>
                     <CardText style={textStyles}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
