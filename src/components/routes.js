@@ -6,7 +6,7 @@ import { Switch, Route } from 'react-router-dom'
 import Home from './Home'
 import About from './About'
 import NotFound from './NotFound'
-import PlayerProfile from "./Player";
+import Player from './Player'
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -18,7 +18,7 @@ const Routes = () => (
         <Switch>
             <Route exact path='/' component={Home}/>
             <Route path='/about' component={About}/>
-            <Route path='/player/:id' component={PlayerProfile}/>
+            <Route path='/player/:id' component={Player}/>
             <Route path='/*' component={NotFound}/>
         </Switch>
     </main>
