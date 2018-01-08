@@ -215,6 +215,16 @@ router.get('/:id', (clientReq, clientRes) => {
             seasons: res[0].seasons,
         };
 
+        // Check for invalid playerID
+        if(profile.id === undefined){
+            // Return the empty player object back to the React front-end
+            clientRes.send({
+                player: null,
+            });
+
+            return;
+        }
+
         // Add profile object to Player object
         player.profile = profile;
 

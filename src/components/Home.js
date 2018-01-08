@@ -2,7 +2,6 @@
  * Components - Home.js
  */
 import React from 'react';
-import PlayerProfile from './Player';
 import SearchBar from './SearchBar';
 import wallpaper from '../image/pubg-man.jpg'
 
@@ -13,9 +12,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
-import {
-    red500, orange500, yellow500, green500, blue500, purple500, grey200, white
-} from 'material-ui/styles/colors';
+import {red500, white} from 'material-ui/styles/colors';
 
 // Introduction Style
 const cardStyles = {
@@ -31,13 +28,13 @@ const mediaStyles = {
 
 const titleStyles = {
     textAlign: 'center',
-    color: 'white',
+    color: white,
     fontSize: '30px',
 };
 
 const textStyles = {
     textAlign: 'center',
-    color: 'white',
+    color: white,
     fontSize: '20px',
 };
 
@@ -54,10 +51,9 @@ const Home = () => (
         <SearchBar/>
         <Card>
             <CardMedia>
-                <img src={wallpaper} alt="" />
+                <img src={wallpaper} alt=""/>
             </CardMedia>
         </Card>
-        {/*<PlayerProfile/>*/}
     </div>
 );
 

@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 
 // Material UI dependencies - Footer
-import {red500, orange500, yellow500, green500, blue500, purple500, grey200} from 'material-ui/styles/colors';
+import {grey200} from 'material-ui/styles/colors';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -48,16 +48,4 @@ const Footer = () => (
     </div>
 );
 
-{/*<AppBar*/
-}
-{/*style={{backgroundColor: grey900}}*/
-}
-{/*title={<span style={styles.title}>PUBG Stats</span>}*/
-}
-{/*showMenuIconButton={false}*/
-}
-{/*iconElementRight={rightButtons}*/
-}
-{/*/>*/
-}
 export default Footer

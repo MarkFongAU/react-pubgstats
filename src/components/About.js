@@ -14,9 +14,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
-import {
-    red500, orange500, yellow500, green500, blue500, purple500, grey200, white
-} from 'material-ui/styles/colors';
+import {blue500, white} from 'material-ui/styles/colors';
 
 // About page Style
 const cardStyles = {
@@ -32,13 +30,13 @@ const mediaStyles = {
 
 const titleStyles = {
     textAlign: 'center',
-    color: 'white',
+    color: white,
     fontSize: '30px',
 };
 
 const textStyles = {
     textAlign: 'center',
-    color: 'white',
+    color: white,
     fontSize: '20px',
 };
 
@@ -61,7 +59,7 @@ const About = () => (
                 PUBG Stats is built with ReactJS.
             </CardText>
             <CardMedia>
-                <img src={wallpaper} alt="" />
+                <img src={wallpaper} alt=""/>
             </CardMedia>
         </Card>
     </div>

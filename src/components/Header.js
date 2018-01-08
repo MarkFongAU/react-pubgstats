@@ -7,7 +7,7 @@ import {Redirect} from 'react-router-dom';
 import {Link} from 'react-router-dom'
 
 // Material UI dependencies - Header
-import {red500, orange500, yellow500, green500, blue500, purple500, grey500, black} from 'material-ui/styles/colors';
+import {black} from 'material-ui/styles/colors';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';

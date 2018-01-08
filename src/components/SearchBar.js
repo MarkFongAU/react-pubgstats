@@ -8,10 +8,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
-import {
-    red500, orange500, yellow500, green500, blue500, purple500, lightBlue500, grey200,
-    greenA700, black, white
-} from 'material-ui/styles/colors';
+import {white} from 'material-ui/styles/colors';
 
 
 import TextField from 'material-ui/TextField';
@@ -52,18 +49,18 @@ const SearchBar = () => (
             <CardText style={textStyles}>
                 <b>Enter PUBG Username</b><br/>
                 <TextField
-                hintText="Username"
+                    hintText="Username"
                 /><br/>
             </CardText>
         </Card>
 
         {/*<Paper zDepth={1} style={{}}>*/}
-            {/*<div style={pageStyles}>*/}
-                {/*<b>Enter PUBG Username</b><br/>*/}
-                {/*<TextField*/}
-                    {/*hintText="Username"*/}
-                {/*/><br/>*/}
-            {/*</div>*/}
+        {/*<div style={pageStyles}>*/}
+        {/*<b>Enter PUBG Username</b><br/>*/}
+        {/*<TextField*/}
+        {/*hintText="Username"*/}
+        {/*/><br/>*/}
+        {/*</div>*/}
         {/*</Paper>*/}
 
 
