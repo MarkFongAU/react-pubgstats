@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom';
 import wallpaper from '../image/pubg-man.jpg'
+import PlayedWith from './PlayedWith';
 
 // Material UI dependencies - Player profile (Card)
 import FlatButton from 'material-ui/FlatButton';
@@ -11,10 +12,13 @@ import FlatButton from 'material-ui/FlatButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
 import Subheader from 'material-ui/Subheader';
+import {List, ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Paper from 'material-ui/Paper';
 import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
+
 
 // Player profile Style
 const divStyles = {
@@ -105,7 +109,7 @@ class Player extends Component {
         this.state = {
             ID: '',
             Player: [],
-            PageLoaded: false,
+            ComponentLoaded: false,
             GameMode: {
                 tpp: [
                     {mode: 'tpp1', label: 'Solo'},
@@ -119,6 +123,8 @@ class Player extends Component {
                     {mode: 'fpp4', label: 'Squad'},
                 ]
             },
+            CurrentTabServer: '',
+            CurrentTabSeason: '',
             // Servers: [],
             // Servers: {
             //     na: {
@@ -163,6 +169,8 @@ class Player extends Component {
             //     },
             // },
         };
+
+        this.FriendListComponent = null;
     }
 
     // Async setState
@@ -179,7 +187,7 @@ class Player extends Component {
             })
             .then(data => {
                 // Server returns empty object due to invalid player ID
-                if(data.player === null){
+                if (data.player === null) {
                     console.log('Invalid Player ID');
                     this.props.history.push('/*');
                 } else {
@@ -188,7 +196,7 @@ class Player extends Component {
                     // console.log(this.state.Player);
 
                     // Allow the page to render after the player stats has been loaded
-                    this.setStateAsync({PageLoaded: true});
+                    this.setStateAsync({ComponentLoaded: true});
                 }
             })
             .catch(error => {
@@ -256,7 +264,6 @@ class Player extends Component {
         console.log(this.state.ID);
         await this.getPlayerStats(this.state.ID);
         console.log(this.state.Player);
-
         // if (!this.state.Player.profile) {
         //     // return;
         // } else {
@@ -282,6 +289,28 @@ class Player extends Component {
     //     this.props.history.push('/');
     // };
 
+    // CONTINUE HERE
+    TabServerChange = (value) => {
+        // this.setState({
+        //     CurrentTabServer: value,
+        // });
+        // console.log('Current tab on:' + 'Server:' + this.state.CurrentTabServer + ' Season: ' + this.state.CurrentTabSeason);
+        // this.renderFriendList();
+    };
+
+    TabSeasonChange = (value) => {
+        // this.setState({
+        //     CurrentTabSeason: value,
+        // });
+        // console.log('Current tab on' + ' Server:' + this.state.CurrentTabServer + ' Season: ' + this.state.CurrentTabSeason);
+        // this.renderFriendList();
+    };
+
+    renderFriendList(playerID, server, season) {
+        this.FriendListComponent = <PlayedWith playerID={playerID} server={server}
+                                               season={season}/>
+    }
+
     render() {
         // fetch('https://randomuser.me/api/?result=500')
         //     .then(res => {
@@ -299,7 +328,7 @@ class Player extends Component {
         //     console.log(playerProfile);
         // });
 
-        if (this.state.PageLoaded === false)
+        if (this.state.ComponentLoaded === false)
             return null;
 
         return (
@@ -356,20 +385,21 @@ class Player extends Component {
                 <Paper zDepth={1}>
                     <Tabs tabItemContainerStyle={{backgroundColor: blue500}}>
                         {this.state.Player.profile.servers.map((server) =>
-                            <Tab key={server.server} label={server.server}>
+                            <Tab key={server.server} label={server.server} value={server.server} onActive={this.TabServerChange}>
                                 <br/>
 
                                 {/* TPP/FPP Tabs */}
                                 <Paper zDepth={1} style={tabStyles.paper}>
                                     <Tabs tabItemContainerStyle={{backgroundColor: green500}}>
-                                        <Tab key='tpp' label='tpp'>
+                                        <Tab key='tpp' label='tpp' value='tpp'>
                                             <br/>
 
                                             {/* Seasons Tabs */}
                                             <Paper zDepth={1} style={tabStyles.paper}>
                                                 <Tabs tabItemContainerStyle={{backgroundColor: purple500}}>
                                                     {this.state.Player.profile.seasons.map((season) =>
-                                                        <Tab key={season.season} label={season.season}>
+                                                        <Tab key={season.season} label={season.season}
+                                                             value={server.season} onActive={this.TabSeasonChange}>
                                                             <div>
                                                                 {this.state.GameMode.tpp.map((mode) =>
                                                                     <Card key={mode.mode}>
@@ -495,14 +525,15 @@ class Player extends Component {
 
                                             <br/>
                                         </Tab>
-                                        <Tab key='fpp' label='fpp'>
+                                        <Tab key='fpp' label='fpp' value='fpp'>
                                             <br/>
 
                                             {/* Seasons Tabs */}
                                             <Paper zDepth={1} style={tabStyles.paper}>
                                                 <Tabs tabItemContainerStyle={{backgroundColor: purple500}}>
                                                     {this.state.Player.profile.seasons.map((season) =>
-                                                        <Tab key={season.season} label={season.season}>
+                                                        <Tab key={season.season} label={season.season}
+                                                             value={server.season} onActive={this.TabSeasonChange}>
                                                             <div>
                                                                 {this.state.GameMode.fpp.map((mode) =>
                                                                     <Card key={mode.mode}>
@@ -637,81 +668,86 @@ class Player extends Component {
                     </Tabs>
                 </Paper>
 
-                <Card>
-                    {/*<CardHeader*/}
-                    {/*title="URL Avatar"*/}
-                    {/*subtitle="Subtitle"*/}
-                    {/*avatar="images/jsa-128.jpg"*/}
-                    {/*/>*/}
-                    {/*<CardMedia*/}
-                    {/*overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle"/>}*/}
-                    {/*>*/}
-                    {/*<img src="images/nature-600-337.jpg" alt=""/>*/}
-                    {/*</CardMedia>*/}
+                {/* Friend List Component */}
+                {this.FriendListComponent}
 
+                {/*<Card>*/}
+                {/*<CardHeader*/}
+                {/*title="Recently Played With"*/}
+                {/*// subtitle="Subtitle"*/}
+                {/*// avatar="images/jsa-128.jpg"*/}
+                {/*/>*/}
+                {/*<CardMedia*/}
+                {/*overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle"/>}*/}
+                {/*>*/}
+                {/*<img src="images/nature-600-337.jpg" alt=""/>*/}
+                {/*</CardMedia>*/}
+
+                {/*Insert PlayedWith component*/}
+                {/*</Card>*/}
+
+                <Card>
                     <CardTitle title='Recent games' subtitle='Subtitles here'
                                titleStyle={recentMatchesStyles.title} subtitleStyle={recentMatchesStyles.subtitle}/>
-
                     <CardText style={recentMatchesStyles.stats}>
                         Add 20 match summary
 
                         Include - Rating change, Pie chart of Queue Size, Avg. Rank, K/D, Damage, Survived time
 
                     </CardText>
-
                     {/*<CardActions>*/}
-                        {/*<FlatButton label="Action1"/>*/}
-                        {/*<FlatButton label="Action2"/>*/}
+                    {/*<FlatButton label="Action1"/>*/}
+                    {/*<FlatButton label="Action2"/>*/}
                     {/*</CardActions>*/}
                     {/*<GridList*/}
-                        {/*cols={2}*/}
-                        {/*cellHeight="auto"*/}
-                        {/*padding={5}*/}
+                    {/*cols={2}*/}
+                    {/*cellHeight="auto"*/}
+                    {/*padding={5}*/}
                     {/*>*/}
-                        {/*<GridTile>*/}
-                            {/*<Card style={{backgroundColor: red500}}>*/}
+                    {/*<GridTile>*/}
+                    {/*<Card style={{backgroundColor: red500}}>*/}
 
-                                {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
-                                {/*<CardText>*/}
-                                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
-                                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
-                                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
-                                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
-                                {/*</CardText>*/}
-                                {/*<CardActions>*/}
-                                    {/*<FlatButton label="Action1"/>*/}
-                                    {/*<FlatButton label="Action2"/>*/}
-                                {/*</CardActions>*/}
-                            {/*</Card>*/}
-                        {/*</GridTile>*/}
-                        {/*<GridTile>*/}
-                            {/*<Card style={{backgroundColor: red500}}>*/}
+                    {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
+                    {/*<CardText>*/}
+                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
+                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
+                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
+                    {/*</CardText>*/}
+                    {/*<CardActions>*/}
+                    {/*<FlatButton label="Action1"/>*/}
+                    {/*<FlatButton label="Action2"/>*/}
+                    {/*</CardActions>*/}
+                    {/*</Card>*/}
+                    {/*</GridTile>*/}
+                    {/*<GridTile>*/}
+                    {/*<Card style={{backgroundColor: red500}}>*/}
 
-                                {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
-                                {/*<CardText>*/}
-                                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
-                                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
-                                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
-                                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
-                                {/*</CardText>*/}
-                                {/*<CardActions>*/}
-                                    {/*<FlatButton label="Action1"/>*/}
-                                    {/*<FlatButton label="Action2"/>*/}
-                                {/*</CardActions>*/}
-                            {/*</Card>*/}
-                        {/*</GridTile>*/}
+                    {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
+                    {/*<CardText>*/}
+                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
+                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
+                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
+                    {/*</CardText>*/}
+                    {/*<CardActions>*/}
+                    {/*<FlatButton label="Action1"/>*/}
+                    {/*<FlatButton label="Action2"/>*/}
+                    {/*</CardActions>*/}
+                    {/*</Card>*/}
+                    {/*</GridTile>*/}
                     {/*</GridList>*/}
 
                     {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
                     {/*<CardText>*/}
-                        {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
-                        {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
-                        {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
-                        {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
+                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
+                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
+                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
                     {/*</CardText>*/}
                     {/*<CardActions>*/}
-                        {/*<FlatButton label="Action1"/>*/}
-                        {/*<FlatButton label="Action2"/>*/}
+                    {/*<FlatButton label="Action1"/>*/}
+                    {/*<FlatButton label="Action2"/>*/}
                     {/*</CardActions>*/}
                 </Card>
             </div>
