@@ -1,12 +1,11 @@
 /**
- * Components - PlayedWith.js
+ * Components - ServerStats.js
  */
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom';
 
-// Material UI dependencies - Player profile (Card)
+// Material UI dependencies - ServerStats
 import FlatButton from 'material-ui/FlatButton';
-
 
 import Subheader from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
@@ -15,17 +14,15 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
 import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
 
-// PlayedWith - display player's recent played with friends list
-
-
-class PlayedWith extends Component {
+// ServerStats - display player's stats in the played server
+class ServerStats extends Component {
     constructor() {
         super();
         this.state = {
             ID: '',
             Server: '',
             Season: '',
-            List: [],
+            Stats: [],
             ComponentLoaded: false,
         };
     }
@@ -36,6 +33,53 @@ class PlayedWith extends Component {
             this.setState(state, resolve)
         });
     }
+
+    async getServerSeasonStats(playerID, server, season) {
+        await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`)
+            .then(res => {
+                return res.json();
+            })
+            .then(data => {
+                this.setStateAsync({
+                    Stats: {
+                        ...this.state.Servers,
+                        [server]: {
+                            ...this.state.Servers[server],
+                            [season]: data.serverSeasonStats,
+                        }
+                    },
+                });
+                // this.setState({
+                //     Servers: {
+                //         ...this.state.Servers,
+                //         [server]: {
+                //             ...this.state.Servers[server],
+                //             [season]: data.serverSeasonStats,
+                //         }
+                //     },
+                // });
+                // console.log(this.state.Servers);
+            })
+            .catch(error => {
+                // Potentially some code for generating an error specific message here
+                console.log('React backend is not available.');
+                this.props.history.push('/*');
+                // next(error);
+            });
+
+        // Pure Async Await
+        // const res = await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`);
+        // const data = await res.json();
+        // await this.setStateAsync({
+        //     Servers: {
+        //         ...this.state.Servers,
+        //         [server]: {
+        //             ...this.state.Servers[server],
+        //             [season]: data.serverSeasonStats,
+        //         }
+        //     },
+        // });
+    };
 
     async getRecentPlayedWithList(playerID, server, season) {
         await fetch(`/api/users/${playerID}/matches/summary-played-with?server=${server}&season=${season}`)
@@ -65,11 +109,9 @@ class PlayedWith extends Component {
         await this.setState({
             ID: this.props.playerID,
             Server: this.props.server,
-            Season: this.props.season
         });
-        await this.getRecentPlayedWithList(this.state.ID, this.state.Server, this.state.Season);
+        await this.getServerSeasonStats(this.state.ID, this.state.Server, this.state.Season);
         console.log(this.state.List);
-        // await this.getRecentPlayedWithList(this.state.ID ,server.server, season.season);
     }
 
     render() {
@@ -78,7 +120,7 @@ class PlayedWith extends Component {
 
         return (
             <div>
-                {/* Recent Played With List*/}
+                {/* Server Stats */}
                 <Card>
                     <Subheader>Recently Played With</Subheader>
                     <Divider/>
@@ -93,7 +135,6 @@ class PlayedWith extends Component {
                         <TableBody displayRowCheckbox={false}>
                             {this.state.List.map((friend) =>
                                 <TableRow key={friend.user.nickname}>
-
                                     <TableRowColumn>{friend.user.nickname}</TableRowColumn>
                                     <TableRowColumn>{friend.stats.matches_count}</TableRowColumn>
                                 </TableRow>
@@ -101,9 +142,15 @@ class PlayedWith extends Component {
                         </TableBody>
                     </Table>
                 </Card>
+
+                {/* Recent Played With Component */}
+                {this.RecentPlayedWithComponent}
+
+                {/* Recent Games (20) Component */}
+                {this.RecentGamesComponent}
             </div>
         );
     }
 }
 
-export default PlayedWith;
+export default ServerStats;
