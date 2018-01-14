@@ -3,7 +3,7 @@ const async = require('async');
 const request = require('request');
 let router = express.Router();
 
-// GET player's lifetime stats and server stats
+// GET player's lifetime stats
 router.get('/:id', (clientReq, clientRes) => {
     let playerID = clientReq.params.id;
 
@@ -31,7 +31,7 @@ router.get('/:id', (clientReq, clientRes) => {
             kda: 0,
             win_rate: 0,
         },
-        server_stats: [],
+        // server_stats: [],
     };
 
     // Player profile request function
@@ -106,15 +106,15 @@ router.get('/:id', (clientReq, clientRes) => {
 
     // Async - GET Server + Season stats function
     async function getServerSeasonStats(server, season) {
-        // Server + Season Stats Object
-        let serverSeasonStats = {
-            tpp1: [],
-            tpp2: [],
-            tpp4: [],
-            fpp1: [],
-            fpp2: [],
-            fpp4: [],
-        };
+        // // Server + Season Stats Object
+        // let serverSeasonStats = {
+        //     tpp1: [],
+        //     tpp2: [],
+        //     tpp4: [],
+        //     fpp1: [],
+        //     fpp2: [],
+        //     fpp4: [],
+        // };
 
         // Server + Season stats request option for all game modes
         let tpp1 = serverSeasonStatsRequestOptions(playerID, server, season, 'tpp', 1);
@@ -157,26 +157,26 @@ router.get('/:id', (clientReq, clientRes) => {
                     // The player has played in this server in this season, parse this response
                     console.log(server, ' ', season, ' ', mode, ' ', 'Played');
 
-                    // Pass JSON data into Server + Season stats object
-                    if (i === 0) {
-                        // mode = 'tpp1';
-                        serverSeasonStats.tpp1 = res[i].stats;
-                    } else if (i === 1) {
-                        // mode = 'tpp2';
-                        serverSeasonStats.tpp2 = res[i].stats;
-                    } else if (i === 2) {
-                        // mode = 'tpp4';
-                        serverSeasonStats.tpp4 = res[i].stats;
-                    } else if (i === 3) {
-                        // mode = 'fpp1';
-                        serverSeasonStats.fpp1 = res[i].stats;
-                    } else if (i === 4) {
-                        // mode = 'fpp2';
-                        serverSeasonStats.fpp2 = res[i].stats;
-                    } else if (i === 5) {
-                        // mode = 'fpp4';
-                        serverSeasonStats.fpp4 = res[i].stats;
-                    }
+                    // // Pass JSON data into Server + Season stats object
+                    // if (i === 0) {
+                    //     // mode = 'tpp1';
+                    //     serverSeasonStats.tpp1 = res[i].stats;
+                    // } else if (i === 1) {
+                    //     // mode = 'tpp2';
+                    //     serverSeasonStats.tpp2 = res[i].stats;
+                    // } else if (i === 2) {
+                    //     // mode = 'tpp4';
+                    //     serverSeasonStats.tpp4 = res[i].stats;
+                    // } else if (i === 3) {
+                    //     // mode = 'fpp1';
+                    //     serverSeasonStats.fpp1 = res[i].stats;
+                    // } else if (i === 4) {
+                    //     // mode = 'fpp2';
+                    //     serverSeasonStats.fpp2 = res[i].stats;
+                    // } else if (i === 5) {
+                    //     // mode = 'fpp4';
+                    //     serverSeasonStats.fpp4 = res[i].stats;
+                    // }
 
                     // Increment player's lifetime stats on played servers in this season
                     player.lifetime_stats.matches_played += res[i].stats.matches_cnt;
@@ -188,14 +188,14 @@ router.get('/:id', (clientReq, clientRes) => {
                 }
             }
 
-            // Add the server and season stats object into the player object
-            player.server_stats = {
-                ...player.server_stats,
-                [server]: {
-                    ...player.server_stats[server],
-                    [season]: serverSeasonStats,
-                }
-            };
+            // // Add the server and season stats object into the player object
+            // player.server_stats = {
+            //     ...player.server_stats,
+            //     [server]: {
+            //         ...player.server_stats[server],
+            //         [season]: serverSeasonStats,
+            //     }
+            // };
 
             // Increment the Async HTTP call counts and check against the expected counts
             completed_async_counts++;
@@ -245,89 +245,6 @@ router.get('/:id', (clientReq, clientRes) => {
 
         // Call Async - Perform GET All Server + Season stats
         APIAsync().then(() => {
-        });
-    });
-});
-
-// GET player's recent played with friends list
-router.get('/:id/matches/summary-played-with', (clientReq, clientRes) => {
-    let playerID = clientReq.params.id;
-    let server = clientReq.query.server;
-    let season = clientReq.query.season;
-
-    console.log('PlayerID:' + playerID + 'Server:' + server + 'Season:' + season);
-
-    // Initial API request option
-    const APIOption = {
-        url: 'https://pubg.op.gg/api/',
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-        json: true
-    };
-
-    // Friend List Object
-    let friendList = [];
-
-    // Friend List request function
-    function friendListRequestOptions(playerID, server, season) {
-        let option = {
-            url: APIOption.url,
-            method: APIOption.method,
-            headers: APIOption.headers,
-            json: APIOption.json,
-        };
-
-        option.url += 'users' + '/' + playerID + '/' + 'matches' + '/' + 'summary-played-with' + '?' +
-            'server=' + server + '&' +
-            'season=' + season;
-
-        return option;
-    }
-
-    // Async HTTP - Multiple Get
-    function multipleGetRequest(options, callback) {
-        request(options,
-            (err, res, body) => {
-                callback(err, body);
-            }
-        );
-    }
-
-    // Friend List request option
-    let friendListOption = friendListRequestOptions(playerID, server, season);
-
-    // Async HTTP - Friend List request option
-    let APIFriendListRequests = [friendListOption];
-
-    // Async - Friend List request
-    async.map(APIFriendListRequests, multipleGetRequest, (err, res) => {
-        if (err) return console.log(err);
-
-        // Check for invalid input (playerID, server, season)
-        if(res[0].users === undefined){
-            // Check if the invalid input is for server and season or playerID
-            if(res[0].message){
-                // Return error message back to the React front-end
-                clientRes.send({
-                    friendList: 'Invalid server/season',
-                });
-            } else {
-                // Return error message object back to the React front-end
-                clientRes.send({
-                    friendList: 'Invalid playerID',
-                });
-            }
-            return;
-        }
-
-        // Friend List Object
-        friendList = res[0].users;
-
-        // Return Friend List object
-        clientRes.send({
-            friendList: friendList,
         });
     });
 });
@@ -453,5 +370,96 @@ router.get('/:id/ranked-stats', (clientReq, clientRes) => {
         });
     });
 });
+
+// GET player's recent played with friends list
+router.get('/:id/matches/summary-played-with', (clientReq, clientRes) => {
+    let playerID = clientReq.params.id;
+    let server = clientReq.query.server;
+    let season = clientReq.query.season;
+
+    console.log('PlayerID:' + playerID + 'Server:' + server + 'Season:' + season);
+
+    // Initial API request option
+    const APIOption = {
+        url: 'https://pubg.op.gg/api/',
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+        json: true
+    };
+
+    // Friend List Object
+    let friendList = [];
+
+    // Friend List request function
+    function friendListRequestOptions(playerID, server, season) {
+        let option = {
+            url: APIOption.url,
+            method: APIOption.method,
+            headers: APIOption.headers,
+            json: APIOption.json,
+        };
+
+        option.url += 'users' + '/' + playerID + '/' + 'matches' + '/' + 'summary-played-with' + '?' +
+            'server=' + server + '&' +
+            'season=' + season;
+
+        return option;
+    }
+
+    // Async HTTP - Multiple Get
+    function multipleGetRequest(options, callback) {
+        request(options,
+            (err, res, body) => {
+                callback(err, body);
+            }
+        );
+    }
+
+    // Friend List request option
+    let friendListOption = friendListRequestOptions(playerID, server, season);
+
+    // Async HTTP - Friend List request option
+    let APIFriendListRequests = [friendListOption];
+
+    // Async - Friend List request
+    async.map(APIFriendListRequests, multipleGetRequest, (err, res) => {
+        if (err) return console.log(err);
+
+        // Check for invalid input (playerID, server, season)
+        if(res[0].users === undefined){
+            // Check if the invalid input is for server and season or playerID
+            if(res[0].message){
+                // Return error message back to the React front-end
+                clientRes.send({
+                    friendList: 'Invalid server/season',
+                });
+            } else {
+                // Return error message object back to the React front-end
+                clientRes.send({
+                    friendList: 'Invalid playerID',
+                });
+            }
+            return;
+        }
+
+        // Friend List Object
+        friendList = res[0].users;
+
+        // Return Friend List object
+        clientRes.send({
+            friendList: friendList,
+        });
+    });
+});
+
+router.get('/:id/matches/recent', (clientReq, clientRes)=> {
+    let playerID = clientReq.params.id;
+    let server = clientReq.query.server;
+    let season = clientReq.query.season;
+});
+
+
 
 module.exports = router;

@@ -1,12 +1,11 @@
 /**
- * Components - PlayedWith.js
+ * Components - RecentPlayedWith.js
  */
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom';
 
-// Material UI dependencies - Player profile (Card)
+// Material UI dependencies - RecentPlayedWith Friend List
 import FlatButton from 'material-ui/FlatButton';
-
 
 import Subheader from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
@@ -15,10 +14,8 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
 import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
 
-// PlayedWith - display player's recent played with friends list
-
-
-class PlayedWith extends Component {
+// RecentPlayedWith - display player's recent played with friends list
+class RecentPlayedWith extends Component {
     constructor() {
         super();
         this.state = {
@@ -69,7 +66,6 @@ class PlayedWith extends Component {
         });
         await this.getRecentPlayedWithList(this.state.ID, this.state.Server, this.state.Season);
         console.log(this.state.List);
-        // await this.getRecentPlayedWithList(this.state.ID ,server.server, season.season);
     }
 
     render() {
@@ -78,7 +74,7 @@ class PlayedWith extends Component {
 
         return (
             <div>
-                {/* Recent Played With List*/}
+                {/* Recent Played With List */}
                 <Card>
                     <Subheader>Recently Played With</Subheader>
                     <Divider/>
@@ -105,4 +101,4 @@ class PlayedWith extends Component {
     }
 }
 
-export default PlayedWith;
+export default RecentPlayedWith;

@@ -4,94 +4,43 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom';
 import wallpaper from '../image/pubg-man.jpg'
-import PlayedWith from './PlayedWith';
+import ServerStats from './ServerStats';
 
-// Material UI dependencies - Player profile (Card)
+// Material UI dependencies - Player profile
 import FlatButton from 'material-ui/FlatButton';
-
-import {Tabs, Tab} from 'material-ui/Tabs';
-import Slider from 'material-ui/Slider';
 import Subheader from 'material-ui/Subheader';
-import {List, ListItem} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
-import Paper from 'material-ui/Paper';
-import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
 
-
-// Player profile Style
-const divStyles = {
+// Player profile page Style
+const pageStyles = {
     backgroundImage: 'url(' + wallpaper + ')',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '100%',
     width: '100%',
-    // minHeight: '300px',
 };
 
-const statsStyles = {
-    header: {
-        // width: '100%',
-        // height: '300px',
-        // backgroundImage: 'url(' + wallpaper + ')',
-        // opacity: 0.5,
-        // backgroundSize: 'cover',
-        // overflow: 'hidden',
-        // backgroundColor: 'transparent',
-    },
-    lifetimeStats: {
-        textAlign: 'center',
-    },
-    serverStats: {
-        textAlign: 'center',
-    },
-    noGamesPlayed: {
-        textAlign: 'center',
-        fontSize: '20px',
-    }
-};
-
-const tabStyles = {
-    paper: {
-        width: '98%',
-        margin: 'auto',
-    },
-    headerTitle: {
-        fontSize: 24,
-        // paddingTop: 16,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
-};
-
-const innerGridStyles = {
-    // backgroundColor: red500,
-    width: '90%',
-    margin: 'auto',
-};
-
-const mediaStyles = {
-    // width: '100%',
-    height: '150px',
-    // backgroundImage: 'url(' + wallpaper + ')',
-    // opacity: 0.5,
-    // backgroundSize: 'cover',
-    // overflow: 'hidden',
-    backgroundColor: 'transparent',
-};
-
-const recentMatchesStyles = {
-    title: {
-        textAlign: 'center',
-        // color: 'white',
+// Lifetime Stats Style
+const lifetimeStyles = {
+    subHeader: {
         fontSize: '20px',
     },
-    subtitle: {
+    gridTile: {
         textAlign: 'center',
     },
-    stats: {
+};
+
+// Server list Style
+const serverListStyles = {
+    subHeader: {
         textAlign: 'center',
-    }
+        fontSize: '20px',
+    },
+    buttonList: {
+        justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center'
+    },
 };
 
 // Player ID (based on OP.gg)
@@ -110,21 +59,6 @@ class Player extends Component {
             ID: '',
             Player: [],
             ComponentLoaded: false,
-            GameMode: {
-                tpp: [
-                    {mode: 'tpp1', label: 'Solo'},
-                    {mode: 'tpp2', label: 'Duo'},
-                    {mode: 'tpp4', label: 'Squad'},
-
-                ],
-                fpp: [
-                    {mode: 'fpp1', label: 'Solo'},
-                    {mode: 'fpp2', label: 'Duo'},
-                    {mode: 'fpp4', label: 'Squad'},
-                ]
-            },
-            CurrentTabServer: '',
-            CurrentTabSeason: '',
             // Servers: [],
             // Servers: {
             //     na: {
@@ -170,7 +104,7 @@ class Player extends Component {
             // },
         };
 
-        this.FriendListComponent = null;
+        this.ServerStatsComponent = null;
     }
 
     // Async setState
@@ -212,53 +146,6 @@ class Player extends Component {
         // await this.setStateAsync({Player: data.player});
     };
 
-    async getServerSeasonStats(server, season) {
-        await fetch(`/api/users/${this.state.ID}/ranked-stats?server=${server}&season=${season}`)
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
-                this.setStateAsync({
-                    Servers: {
-                        ...this.state.Servers,
-                        [server]: {
-                            ...this.state.Servers[server],
-                            [season]: data.serverSeasonStats,
-                        }
-                    },
-                });
-                // this.setState({
-                //     Servers: {
-                //         ...this.state.Servers,
-                //         [server]: {
-                //             ...this.state.Servers[server],
-                //             [season]: data.serverSeasonStats,
-                //         }
-                //     },
-                // });
-                // console.log(this.state.Servers);
-            })
-            .catch(error => {
-                // Potentially some code for generating an error specific message here
-                console.log('React backend is not available.');
-                this.props.history.push('/*');
-                // next(error);
-            });
-
-        // Pure Async Await
-        // const res = await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`);
-        // const data = await res.json();
-        // await this.setStateAsync({
-        //     Servers: {
-        //         ...this.state.Servers,
-        //         [server]: {
-        //             ...this.state.Servers[server],
-        //             [season]: data.serverSeasonStats,
-        //         }
-        //     },
-        // });
-    };
-
     async componentDidMount() {
         await this.setState({ID: this.props.match.params.id});
         console.log(this.state.ID);
@@ -289,59 +176,27 @@ class Player extends Component {
     //     this.props.history.push('/');
     // };
 
-    // CONTINUE HERE
-    TabServerChange = (value) => {
-        // this.setState({
-        //     CurrentTabServer: value,
-        // });
-        // console.log('Current tab on:' + 'Server:' + this.state.CurrentTabServer + ' Season: ' + this.state.CurrentTabSeason);
-        // this.renderFriendList();
-    };
-
-    TabSeasonChange = (value) => {
-        // this.setState({
-        //     CurrentTabSeason: value,
-        // });
-        // console.log('Current tab on' + ' Server:' + this.state.CurrentTabServer + ' Season: ' + this.state.CurrentTabSeason);
-        // this.renderFriendList();
-    };
-
-    renderFriendList(playerID, server, season) {
-        this.FriendListComponent = <PlayedWith playerID={playerID} server={server}
-                                               season={season}/>
+    renderServerStats(playerID, server, seasons) {
+        this.ServerStatsComponent = <ServerStats playerID={playerID} server={server} seasons={seasons} />;
+        console.log('PlayerID: ' + playerID + ' Server:' + server + ' Seasons:' + seasons);
     }
 
     render() {
-        // fetch('https://randomuser.me/api/?result=500')
-        //     .then(res => {
-        //         return res.json();
-        //     }).then(data => {
-        //     let playerProfile = data.results.map((res) => {
-        //         console.log(res.id.value);
-        //         console.log(res.name.first);
-        //         console.log(res.name.last);
-        //         return playerProfile = {
-        //             id: res.id.value,
-        //             nickname: res.name.first + res.name.last,
-        //         }
-        //     });
-        //     console.log(playerProfile);
-        // });
-
         if (this.state.ComponentLoaded === false)
             return null;
 
         return (
-            <div style={divStyles}>
-                <Card style={statsStyles.header}>
+            <div style={pageStyles}>
+                {/* Lifetime Stats */}
+                <Card>
                     <CardTitle title={this.state.Player.profile.nickname} subtitle={this.state.Player.profile.id}/>
                     <GridList
                         cols={3}
                         cellHeight="auto"
                         padding={5}
-                        style={statsStyles.lifetimeStats}
+                        style={lifetimeStyles.gridTile}
                     >
-                        <Subheader style={{fontSize: 20}}>Lifetime Stats:</Subheader>
+                        <Subheader style={lifetimeStyles.subHeader}>Lifetime Stats:</Subheader>
                         <GridTile>
                             <div>
                                 <b>Matches Played</b>
@@ -381,375 +236,20 @@ class Player extends Component {
                     </GridList>
                 </Card>
 
-                {/* Servers Tabs */}
-                <Paper zDepth={1}>
-                    <Tabs tabItemContainerStyle={{backgroundColor: blue500}}>
-                        {this.state.Player.profile.servers.map((server) =>
-                            <Tab key={server.server} label={server.server} value={server.server} onActive={this.TabServerChange}>
-                                <br/>
-
-                                {/* TPP/FPP Tabs */}
-                                <Paper zDepth={1} style={tabStyles.paper}>
-                                    <Tabs tabItemContainerStyle={{backgroundColor: green500}}>
-                                        <Tab key='tpp' label='tpp' value='tpp'>
-                                            <br/>
-
-                                            {/* Seasons Tabs */}
-                                            <Paper zDepth={1} style={tabStyles.paper}>
-                                                <Tabs tabItemContainerStyle={{backgroundColor: purple500}}>
-                                                    {this.state.Player.profile.seasons.map((season) =>
-                                                        <Tab key={season.season} label={season.season}
-                                                             value={server.season} onActive={this.TabSeasonChange}>
-                                                            <div>
-                                                                {this.state.GameMode.tpp.map((mode) =>
-                                                                    <Card key={mode.mode}>
-                                                                        <CardTitle title={mode.label}/>
-                                                                        {this.state.Player.server_stats[server.server][season.season][mode.mode].rating ?
-                                                                            <GridList
-                                                                                cols={3}
-                                                                                cellHeight="auto"
-                                                                                padding={5}
-                                                                                style={statsStyles.serverStats}
-                                                                            >
-                                                                                <Subheader
-                                                                                    style={{fontSize: 20}}>Rating: {this.state.Player.server_stats[server.server][season.season][mode.mode].rating},
-                                                                                    Games
-                                                                                    Played: {this.state.Player.server_stats[server.server][season.season][mode.mode].matches_cnt}</Subheader>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].win_matches_cnt} /
-                                                                                                {(this.state.Player.server_stats[server.server][season.season][mode.mode].win_matches_cnt / this.state.Player.server_stats[server.server][season.season][mode.mode].matches_cnt).toFixed(1)} %
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Wins / Win %</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].topten_matches_cnt} /
-                                                                                                {(this.state.Player.server_stats[server.server][season.season][mode.mode].topten_matches_cnt / this.state.Player.server_stats[server.server][season.season][mode.mode].matches_cnt).toFixed(1)} %
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Top 10s / Top 10%</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b># {this.state.Player.server_stats[server.server][season.season][mode.mode].rank_avg.toFixed(1)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Avg. Rank</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{(this.state.Player.server_stats[server.server][season.season][mode.mode].kills_sum / this.state.Player.server_stats[server.server][season.season][mode.mode].deaths_sum).toFixed(2)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>K/D</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{(this.state.Player.server_stats[server.server][season.season][mode.mode].headshot_kills_sum / this.state.Player.server_stats[server.server][season.season][mode.mode].kills_sum).toFixed(1)}%
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Headshot %</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].damage_dealt_avg.toFixed(0)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Avg. Damage</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{((this.state.Player.server_stats[server.server][season.season][mode.mode].kills_sum + this.state.Player.server_stats[server.server][season.season][mode.mode].assists_sum) / this.state.Player.server_stats[server.server][season.season][mode.mode].deaths_sum).toFixed(2)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>KDA</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].kills_max}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Most Kills</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{(this.state.Player.server_stats[server.server][season.season][mode.mode].time_survived_avg / 60).toFixed(2)} minutes
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Avg. survival
-                                                                                                time</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                            </GridList> :
-                                                                            <CardText style={statsStyles.noGamesPlayed}>
-                                                                                There is
-                                                                                no {mode.label.toLowerCase()} TPP game
-                                                                                yet
-                                                                            </CardText>
-                                                                        }
-                                                                    </Card>
-                                                                )}
-                                                            </div>
-                                                        </Tab>
-                                                    )}
-                                                </Tabs>
-                                            </Paper>
-
-                                            <br/>
-                                        </Tab>
-                                        <Tab key='fpp' label='fpp' value='fpp'>
-                                            <br/>
-
-                                            {/* Seasons Tabs */}
-                                            <Paper zDepth={1} style={tabStyles.paper}>
-                                                <Tabs tabItemContainerStyle={{backgroundColor: purple500}}>
-                                                    {this.state.Player.profile.seasons.map((season) =>
-                                                        <Tab key={season.season} label={season.season}
-                                                             value={server.season} onActive={this.TabSeasonChange}>
-                                                            <div>
-                                                                {this.state.GameMode.fpp.map((mode) =>
-                                                                    <Card key={mode.mode}>
-                                                                        <CardTitle title={mode.label}/>
-                                                                        {this.state.Player.server_stats[server.server][season.season][mode.mode].rating ?
-                                                                            <GridList
-                                                                                cols={3}
-                                                                                cellHeight="auto"
-                                                                                padding={5}
-                                                                                style={statsStyles.serverStats}
-                                                                            >
-                                                                                <Subheader
-                                                                                    style={{fontSize: 20}}>Rating: {this.state.Player.server_stats[server.server][season.season][mode.mode].rating},
-                                                                                    Games
-                                                                                    Played: {this.state.Player.server_stats[server.server][season.season][mode.mode].matches_cnt}</Subheader>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].win_matches_cnt} /
-                                                                                                {(this.state.Player.server_stats[server.server][season.season][mode.mode].win_matches_cnt / this.state.Player.server_stats[server.server][season.season][mode.mode].matches_cnt).toFixed(1)} %
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Wins / Win %</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].topten_matches_cnt} /
-                                                                                                {(this.state.Player.server_stats[server.server][season.season][mode.mode].topten_matches_cnt / this.state.Player.server_stats[server.server][season.season][mode.mode].matches_cnt).toFixed(1)} %
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Top 10s / Top 10%</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b># {this.state.Player.server_stats[server.server][season.season][mode.mode].rank_avg.toFixed(1)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Avg. Rank</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{(this.state.Player.server_stats[server.server][season.season][mode.mode].kills_sum / this.state.Player.server_stats[server.server][season.season][mode.mode].deaths_sum).toFixed(2)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>K/D</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{(this.state.Player.server_stats[server.server][season.season][mode.mode].headshot_kills_sum / this.state.Player.server_stats[server.server][season.season][mode.mode].kills_sum).toFixed(1)}%
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Headshot %</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].damage_dealt_avg.toFixed(0)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Avg. Damage</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{((this.state.Player.server_stats[server.server][season.season][mode.mode].kills_sum + this.state.Player.server_stats[server.server][season.season][mode.mode].assists_sum) / this.state.Player.server_stats[server.server][season.season][mode.mode].deaths_sum).toFixed(2)}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>KDA</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{this.state.Player.server_stats[server.server][season.season][mode.mode].kills_max}
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Most Kills</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                                <GridTile>
-                                                                                    <div>
-                                                                                        <p>
-                                                                                            <b>{(this.state.Player.server_stats[server.server][season.season][mode.mode].time_survived_avg / 60).toFixed(2)} minutes
-                                                                                            </b>
-                                                                                            <br/>
-                                                                                            <sub>Avg. survival
-                                                                                                time</sub>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </GridTile>
-                                                                            </GridList> :
-                                                                            <CardText style={statsStyles.noGamesPlayed}>
-                                                                                There is
-                                                                                no {mode.label.toLowerCase()} FPP game
-                                                                                yet
-                                                                            </CardText>
-                                                                        }
-                                                                    </Card>
-                                                                )}
-                                                            </div>
-                                                        </Tab>
-                                                    )}
-                                                </Tabs>
-                                            </Paper>
-
-                                            <br/>
-                                        </Tab>
-                                    </Tabs>
-                                </Paper>
-
-                                <br/>
-                            </Tab>
-                        )}
-                    </Tabs>
-                </Paper>
-
-                {/* Friend List Component */}
-                {this.FriendListComponent}
-
-                {/*<Card>*/}
-                {/*<CardHeader*/}
-                {/*title="Recently Played With"*/}
-                {/*// subtitle="Subtitle"*/}
-                {/*// avatar="images/jsa-128.jpg"*/}
-                {/*/>*/}
-                {/*<CardMedia*/}
-                {/*overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle"/>}*/}
-                {/*>*/}
-                {/*<img src="images/nature-600-337.jpg" alt=""/>*/}
-                {/*</CardMedia>*/}
-
-                {/*Insert PlayedWith component*/}
-                {/*</Card>*/}
-
+                {/* List of Servers */}
                 <Card>
-                    <CardTitle title='Recent games' subtitle='Subtitles here'
-                               titleStyle={recentMatchesStyles.title} subtitleStyle={recentMatchesStyles.subtitle}/>
-                    <CardText style={recentMatchesStyles.stats}>
-                        Add 20 match summary
-
-                        Include - Rating change, Pie chart of Queue Size, Avg. Rank, K/D, Damage, Survived time
-
-                    </CardText>
-                    {/*<CardActions>*/}
-                    {/*<FlatButton label="Action1"/>*/}
-                    {/*<FlatButton label="Action2"/>*/}
-                    {/*</CardActions>*/}
-                    {/*<GridList*/}
-                    {/*cols={2}*/}
-                    {/*cellHeight="auto"*/}
-                    {/*padding={5}*/}
-                    {/*>*/}
-                    {/*<GridTile>*/}
-                    {/*<Card style={{backgroundColor: red500}}>*/}
-
-                    {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
-                    {/*<CardText>*/}
-                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
-                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
-                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
-                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
-                    {/*</CardText>*/}
-                    {/*<CardActions>*/}
-                    {/*<FlatButton label="Action1"/>*/}
-                    {/*<FlatButton label="Action2"/>*/}
-                    {/*</CardActions>*/}
-                    {/*</Card>*/}
-                    {/*</GridTile>*/}
-                    {/*<GridTile>*/}
-                    {/*<Card style={{backgroundColor: red500}}>*/}
-
-                    {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
-                    {/*<CardText>*/}
-                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
-                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
-                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
-                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
-                    {/*</CardText>*/}
-                    {/*<CardActions>*/}
-                    {/*<FlatButton label="Action1"/>*/}
-                    {/*<FlatButton label="Action2"/>*/}
-                    {/*</CardActions>*/}
-                    {/*</Card>*/}
-                    {/*</GridTile>*/}
-                    {/*</GridList>*/}
-
-                    {/*<CardTitle title="Card title" subtitle="Card subtitle"/>*/}
-                    {/*<CardText>*/}
-                    {/*Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
-                    {/*Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.*/}
-                    {/*Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.*/}
-                    {/*Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.*/}
-                    {/*</CardText>*/}
-                    {/*<CardActions>*/}
-                    {/*<FlatButton label="Action1"/>*/}
-                    {/*<FlatButton label="Action2"/>*/}
-                    {/*</CardActions>*/}
+                    <Subheader style={serverListStyles.subHeader}>Servers:</Subheader>
+                    <div style={serverListStyles.buttonList}>
+                        {this.state.Player.profile.servers.map((server) =>
+                            <FlatButton key={server.server} label={server.server} onClick={() => {
+                                this.renderServerStats(this.state.Player.profile.id, server.server, this.state.Player.profile.seasons)
+                            }}/>
+                        )}
+                    </div>
                 </Card>
+
+                {/* Server Stats Component */}
+                {this.ServerStatsComponent}
             </div>
         );
     }

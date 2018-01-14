@@ -2,10 +2,15 @@
  * Components - ServerStats.js
  */
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom'
+import SeasonStats from './SeasonStats';
+import RecentPlayedWith from './RecentPlayedWith';
+import RecentGames from './RecentGames';
 
 // Material UI dependencies - ServerStats
 import FlatButton from 'material-ui/FlatButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 import Subheader from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
@@ -14,6 +19,19 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
 import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
 
+// Season list Style
+const seasonListStyles = {
+    subHeader: {
+        textAlign: 'center',
+        fontSize: '20px',
+    },
+    buttonList: {
+        justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center'
+    },
+};
+
 // ServerStats - display player's stats in the played server
 class ServerStats extends Component {
     constructor() {
@@ -21,97 +39,48 @@ class ServerStats extends Component {
         this.state = {
             ID: '',
             Server: '',
-            Season: '',
-            Stats: [],
+            Seasons: [],
+            CurrentSeason: '2018-01',
             ComponentLoaded: false,
         };
+
+        this.SeasonStatsComponent = null;
+        this.RecentPlayedWithComponent = null;
+        this.RecentGamesComponent = null;
     }
-
-    // Async setState
-    setStateAsync(state) {
-        return new Promise((resolve) => {
-            this.setState(state, resolve)
-        });
-    }
-
-    async getServerSeasonStats(playerID, server, season) {
-        await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`)
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
-                this.setStateAsync({
-                    Stats: {
-                        ...this.state.Servers,
-                        [server]: {
-                            ...this.state.Servers[server],
-                            [season]: data.serverSeasonStats,
-                        }
-                    },
-                });
-                // this.setState({
-                //     Servers: {
-                //         ...this.state.Servers,
-                //         [server]: {
-                //             ...this.state.Servers[server],
-                //             [season]: data.serverSeasonStats,
-                //         }
-                //     },
-                // });
-                // console.log(this.state.Servers);
-            })
-            .catch(error => {
-                // Potentially some code for generating an error specific message here
-                console.log('React backend is not available.');
-                this.props.history.push('/*');
-                // next(error);
-            });
-
-        // Pure Async Await
-        // const res = await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`);
-        // const data = await res.json();
-        // await this.setStateAsync({
-        //     Servers: {
-        //         ...this.state.Servers,
-        //         [server]: {
-        //             ...this.state.Servers[server],
-        //             [season]: data.serverSeasonStats,
-        //         }
-        //     },
-        // });
-    };
-
-    async getRecentPlayedWithList(playerID, server, season) {
-        await fetch(`/api/users/${playerID}/matches/summary-played-with?server=${server}&season=${season}`)
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
-                // Server returns empty object due to invalid player ID
-                if (data.friendList === 'Invalid playerID') {
-                    console.log('Invalid Player ID');
-                } else if (data.friendList === 'Invalid server/season') {
-                    console.log('Invalid server/season');
-                } else {
-                    this.setStateAsync({List: data.friendList});
-
-                    // Allow the component to render after the friend list has been loaded
-                    this.setStateAsync({ComponentLoaded: true});
-                }
-            })
-            .catch(error => {
-                // Potentially some code for generating an error specific message here
-                console.log('React backend is not available.');
-            });
-    };
 
     async componentDidMount() {
         await this.setState({
             ID: this.props.playerID,
             Server: this.props.server,
+            Seasons: this.props.seasons,
         });
-        await this.getServerSeasonStats(this.state.ID, this.state.Server, this.state.Season);
-        console.log(this.state.List);
+
+        console.log('PlayerID: ' + this.state.ID + ' Server:' + this.state.Server + ' Seasons:' + this.state.Seasons);
+
+        // Allow the page to render after the parameters has been loaded
+        await this.setState({ComponentLoaded: true});
+    }
+
+    renderSeasonStats(playerID, server, season) {
+        this.SeasonStatsComponent = <SeasonStats playerID={playerID} server={server}
+                                                           season={season}/>
+    }
+
+    renderRecentPlayedWith(playerID, server, season) {
+        this.RecentPlayedWithComponent = <RecentPlayedWith playerID={playerID} server={server}
+                                                           season={season}/>
+    }
+
+    renderRecentGames(playerID, server, season) {
+        this.RecentGamesComponent = <RecentGames playerID={playerID} server={server}
+                                                           season={season}/>
+    }
+
+    switchSeason(playerID, server, season) {
+        this.renderSeasonStats(playerID, server, season);
+        this.renderRecentPlayedWith(playerID, server, season);
+        this.renderRecentGames(playerID, server, season);
     }
 
     render() {
@@ -120,28 +89,28 @@ class ServerStats extends Component {
 
         return (
             <div>
-                {/* Server Stats */}
+                {/* List of seasons */}
                 <Card>
-                    <Subheader>Recently Played With</Subheader>
-                    <Divider/>
-                    <Table>
-                        <TableHeader adjustForCheckbox={false}
-                                     displaySelectAll={false}>
-                            <TableRow>
-                                <TableHeaderColumn>Username</TableHeaderColumn>
-                                <TableHeaderColumn>Games</TableHeaderColumn>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody displayRowCheckbox={false}>
-                            {this.state.List.map((friend) =>
-                                <TableRow key={friend.user.nickname}>
-                                    <TableRowColumn>{friend.user.nickname}</TableRowColumn>
-                                    <TableRowColumn>{friend.stats.matches_count}</TableRowColumn>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                    <Subheader style={seasonListStyles.subHeader}>Seasons:</Subheader>
+                    <div style={seasonListStyles.buttonList}>
+                        {this.state.Seasons.map((season) =>
+                            <FlatButton key={season.season} label={season.season} onClick={() => {
+                                this.switchSeason(this.state.ID, this.state.Server, season.season)
+                            }}/>
+                        )}
+                    </div>
                 </Card>
+
+                {/*<DropDownMenu value={this.state.value} onChange={this.handleChange}>*/}
+                    {/*<MenuItem value={1} primaryText="Never" />*/}
+                    {/*<MenuItem value={2} primaryText="Every Night" />*/}
+                    {/*<MenuItem value={3} primaryText="Weeknights" />*/}
+                    {/*<MenuItem value={4} primaryText="Weekends" />*/}
+                    {/*<MenuItem value={5} primaryText="Weekly" />*/}
+                {/*</DropDownMenu>*/}
+
+                {/* Season Stats Component*/}
+                {this.SeasonStatsComponent}
 
                 {/* Recent Played With Component */}
                 {this.RecentPlayedWithComponent}

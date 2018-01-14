@@ -40,6 +40,6 @@ Returns match details
 - Example: https://pubg.op.gg/api/matches/2U4GBNA0Yml_fdeqrDDqxho56ZwCV4jz6tX-0lvOAlhz7qIPN280fRMwcwmCQ3F1
 ```
 
-3. The search functionality of the website is not working. Enter `http://localhost:3000/player/59fe3604465dcc0001b82b45` in the browser to view th page.
+3. The search functionality of the website is not working, because I can't find the searching API. Enter `http://localhost:3000/player/59fe3604465dcc0001b82b45` in the browser to view th page.
 
-
+4. Rendering of new component is not working at the moment.
