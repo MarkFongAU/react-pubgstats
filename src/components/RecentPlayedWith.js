@@ -35,7 +35,7 @@ class RecentPlayedWith extends Component {
     }
 
     async getRecentPlayedWithList(playerID, server, season) {
-        await fetch(`/api/users/${playerID}/matches/summary-played-with?server=${server}&season=${season}`)
+        await fetch(`/recentplayedwith/${playerID}/matches/summary-played-with?server=${server}&season=${season}`)
             .then(res => {
                 return res.json();
             })
