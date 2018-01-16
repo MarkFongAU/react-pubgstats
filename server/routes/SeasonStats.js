@@ -93,10 +93,10 @@ router.get('/:id/ranked-stats', (clientReq, clientRes) => {
             // Check if player has ever played in the server in this season
             if (res[i].hasOwnProperty('message')) {
                 // The player has not played in this server in this season, skip parsing on this response
-                console.log(server, ' ', season, ' ', mode, ' ', 'N/A');
+                // console.log(server, ' ', season, ' ', mode, ' ', 'N/A');
             } else {
                 // The player has played in this server in this season, parse this response
-                console.log(server, ' ', season, ' ', mode, ' ', 'Played');
+                // console.log(server, ' ', season, ' ', mode, ' ', 'Played');
 
                 // Pass JSON data into Server + Season stats object
                 if (i === 0) {

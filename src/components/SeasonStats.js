@@ -73,7 +73,7 @@ class SeasonStats extends Component {
     }
 
     async getSeasonStats(playerID, server, season) {
-        await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`)
+        await fetch(`/seasonstats/${playerID}/ranked-stats?server=${server}&season=${season}`)
             .then(res => {
                 return res.json();
             })
@@ -240,7 +240,7 @@ class SeasonStats extends Component {
                                                 <GridTile>
                                                     <div>
                                                         <p>
-                                                            <b>{(this.state.Stats[mode.mode].time_survived_avg / 60).toFixed(2)} minutes
+                                                            <b>{Math.floor(this.state.Stats[mode.mode].time_survived_avg / 60)}:{Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)} minutes
                                                             </b>
                                                             <br/>
                                                             <sub>Avg. survival
@@ -377,7 +377,7 @@ class SeasonStats extends Component {
                                                 <GridTile>
                                                     <div>
                                                         <p>
-                                                            <b>{(this.state.Stats[mode.mode].time_survived_avg / 60).toFixed(2)} minutes
+                                                            <b>{Math.floor(this.state.Stats[mode.mode].time_survived_avg / 60)}:{Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)} minutes
                                                             </b>
                                                             <br/>
                                                             <sub>Avg. survival

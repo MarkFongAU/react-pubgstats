@@ -40,7 +40,7 @@ class ServerStats extends Component {
             ID: '',
             Server: '',
             Seasons: [],
-            CurrentSeason: '2018-01',
+            SelectedSeason: '2018-01',
             ComponentLoaded: false,
         };
 
@@ -62,36 +62,36 @@ class ServerStats extends Component {
         await this.setState({ComponentLoaded: true});
     }
 
-    renderSeasonStats(playerID, server, season) {
-        this.SeasonStatsComponent = <SeasonStats playerID={playerID} server={server}
-                                                           season={season}/>
-    }
-
-    renderRecentPlayedWith(playerID, server, season) {
-        this.RecentPlayedWithComponent = <RecentPlayedWith playerID={playerID} server={server}
-                                                           season={season}/>
-    }
-
-    renderRecentGames(playerID, server, season) {
-        this.RecentGamesComponent = <RecentGames playerID={playerID} server={server}
-                                                           season={season}/>
-    }
-
     switchSeason(playerID, server, season) {
-        this.renderSeasonStats(playerID, server, season);
-        this.renderRecentPlayedWith(playerID, server, season);
-        this.renderRecentGames(playerID, server, season);
+        this.setState({SelectedSeason: season});
     }
 
     render() {
         if (this.state.ComponentLoaded === false)
             return null;
 
+        {/* Render SeasonStats */}
+        if (this.state.SelectedSeason) {
+            this.SeasonStatsComponent =
+                <SeasonStats key={'SeasonStats' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
+                             season={this.state.SelectedSeason}/>;
+
+            this.RecentPlayedWithComponent =
+                <RecentPlayedWith key={'RecentPlayedWith' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
+                                  season={this.state.SelectedSeason}/>;
+
+            this.RecentGamesComponent =
+                <RecentGames key={'RecentGames' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
+                             season={this.state.SelectedSeason}/>;
+        }
+
         return (
             <div>
                 {/* List of seasons */}
                 <Card>
-                    <Subheader style={seasonListStyles.subHeader}>Seasons:</Subheader>
+                    <Subheader style={seasonListStyles.subHeader}>{this.state.Server.toUpperCase()}'s
+                        Seasons:</Subheader>
+                    <Divider/>
                     <div style={seasonListStyles.buttonList}>
                         {this.state.Seasons.map((season) =>
                             <FlatButton key={season.season} label={season.season} onClick={() => {
@@ -102,11 +102,11 @@ class ServerStats extends Component {
                 </Card>
 
                 {/*<DropDownMenu value={this.state.value} onChange={this.handleChange}>*/}
-                    {/*<MenuItem value={1} primaryText="Never" />*/}
-                    {/*<MenuItem value={2} primaryText="Every Night" />*/}
-                    {/*<MenuItem value={3} primaryText="Weeknights" />*/}
-                    {/*<MenuItem value={4} primaryText="Weekends" />*/}
-                    {/*<MenuItem value={5} primaryText="Weekly" />*/}
+                {/*<MenuItem value={1} primaryText="Never" />*/}
+                {/*<MenuItem value={2} primaryText="Every Night" />*/}
+                {/*<MenuItem value={3} primaryText="Weeknights" />*/}
+                {/*<MenuItem value={4} primaryText="Weekends" />*/}
+                {/*<MenuItem value={5} primaryText="Weekly" />*/}
                 {/*</DropDownMenu>*/}
 
                 {/* Season Stats Component*/}

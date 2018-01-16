@@ -9,6 +9,7 @@ import ServerStats from './ServerStats';
 // Material UI dependencies - Player profile
 import FlatButton from 'material-ui/FlatButton';
 import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
 
@@ -59,6 +60,7 @@ class Player extends Component {
             ID: '',
             Player: [],
             ComponentLoaded: false,
+            SelectedServer: '',
             // Servers: [],
             // Servers: {
             //     na: {
@@ -115,7 +117,7 @@ class Player extends Component {
     }
 
     async getPlayerStats(playerID) {
-        await fetch(`/api/users/${playerID}`)
+        await fetch(`/player/${playerID}`)
             .then(res => {
                 return res.json();
             })
@@ -164,7 +166,6 @@ class Player extends Component {
         // }
         // //
         // console.log(this.state.Servers);
-
     }
 
     // HandleOnClick = () => {
@@ -176,14 +177,21 @@ class Player extends Component {
     //     this.props.history.push('/');
     // };
 
-    renderServerStats(playerID, server, seasons) {
-        this.ServerStatsComponent = <ServerStats playerID={playerID} server={server} seasons={seasons} />;
-        console.log('PlayerID: ' + playerID + ' Server:' + server + ' Seasons:' + seasons);
+    selectServerStats(playerID, server, seasons) {
+        // console.log('PlayerID: ' + playerID + ' Server:' + server + ' Seasons:' + seasons);
+        this.setState({SelectedServer: server});
     }
 
     render() {
         if (this.state.ComponentLoaded === false)
             return null;
+
+        {/* Render ServerStats */}
+        if (this.state.SelectedServer) {
+            this.ServerStatsComponent =
+                <ServerStats key={this.state.SelectedServer} playerID={this.state.Player.profile.id}
+                             server={this.state.SelectedServer} seasons={this.state.Player.profile.seasons}/>;
+        }
 
         return (
             <div style={pageStyles}>
@@ -239,10 +247,11 @@ class Player extends Component {
                 {/* List of Servers */}
                 <Card>
                     <Subheader style={serverListStyles.subHeader}>Servers:</Subheader>
+                    <Divider/>
                     <div style={serverListStyles.buttonList}>
                         {this.state.Player.profile.servers.map((server) =>
                             <FlatButton key={server.server} label={server.server} onClick={() => {
-                                this.renderServerStats(this.state.Player.profile.id, server.server, this.state.Player.profile.seasons)
+                                this.selectServerStats(this.state.Player.profile.id, server.server, this.state.Player.profile.seasons);
                             }}/>
                         )}
                     </div>
