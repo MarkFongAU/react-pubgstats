@@ -42,4 +42,6 @@ Returns match details
 
 3. The search functionality of the website is not working, because I can't find the searching API. Enter `http://localhost:3000/player/59fe3604465dcc0001b82b45` in the browser to view th page.
 
-4. Rendering of new component is not working at the moment.
+4. Rendering of new components has been fixed.
+
+5. Functionality 75% done. More to come.
