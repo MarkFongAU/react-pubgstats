@@ -6,6 +6,20 @@ On the second terminals, run `npm start` to start the react app.
 
 Access the web application at `http://localhost:3000`.
 
+Some Screenshots of the webpage (not complete, so the design is horrible):
+
+Home Page
+![alt text](./src/image/Screenshot-1.jpg)
+
+About Page
+![alt text](./src/image/Screenshot-2.jpg)
+
+Stats Page
+![alt text](./src/image/Screenshot-3.jpg)
+
+Stats Page (Scroll down)
+![alt text](./src/image/Screenshot-4.jpg)
+
 Note: 
 
 1. The Express Node server has been integrated successfully with the React front-end created with [Create React App](https://github.com/facebookincubator/create-react-app). More features will be added soon.
