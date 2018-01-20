@@ -136,6 +136,7 @@ class SeasonStats extends Component {
 
                 {/* TPP/FPP Tabs */}
                 <Paper zDepth={1} style={tabStyles.paper}>
+                    <Subheader>Season {this.state.Season}</Subheader>
                     <Tabs tabItemContainerStyle={{backgroundColor: green500}}>
                         <Tab key='tpp' label='tpp' value='tpp'>
                             <br/>

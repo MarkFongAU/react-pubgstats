@@ -194,7 +194,7 @@ class Player extends Component {
         }
 
         return (
-            <div style={pageStyles}>
+            <div>
                 {/* Lifetime Stats */}
                 <Card>
                     <CardTitle title={this.state.Player.profile.nickname} subtitle={this.state.Player.profile.id}/>

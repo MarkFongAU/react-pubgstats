@@ -6,6 +6,9 @@ import {withRouter} from 'react-router-dom';
 
 // Material UI dependencies - RecentGames
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import Toggle from 'material-ui/Toggle';
+import IconMenu from 'material-ui/IconMenu';
 
 import Subheader from 'material-ui/Subheader';
 import {List, ListItem} from 'material-ui/List';
@@ -14,16 +17,6 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {GridList, GridTile} from 'material-ui/GridList';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
 import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
-
-const mediaStyles = {
-    // width: '100%',
-    height: '150px',
-    // backgroundImage: 'url(' + wallpaper + ')',
-    // opacity: 0.5,
-    // backgroundSize: 'cover',
-    // overflow: 'hidden',
-    backgroundColor: 'transparent',
-};
 
 // Recent Games Summary Styles
 const recentGamesSummaryStyles = {
@@ -132,75 +125,88 @@ class RecentGames extends Component {
         if (this.state.ComponentLoaded === false)
             return null;
 
+        {/* Render Recent Games */} {/* Continue Here */}
+        // if (this.state.SelectedServer) {
+        //     this.ServerStatsComponent =
+        //         <ServerStats key={this.state.SelectedServer} playerID={this.state.Player.profile.id}
+        //                      server={this.state.SelectedServer} seasons={this.state.Player.profile.seasons}/>;
+        // }
+
         return (
             <div>
                 {/* Recent Games Summary (max 20) */}
-                <Card>
-                    <CardTitle title='Recently Games Summary'
-                               titleStyle={recentGamesSummaryStyles.title}
-                               subtitleStyle={recentGamesSummaryStyles.subtitle}/>
-
+                {this.state.Games.matches.summary.modes ?
                     <Card>
-                        <Subheader>Rating Changes in
-                            Recent {this.state.Games.matches.summary.modes['4'].matches_cnt} Games</Subheader>
-                        <Divider/>
+                        <CardTitle title='Recently Games Summary'
+                                   titleStyle={recentGamesSummaryStyles.title}
+                                   subtitleStyle={recentGamesSummaryStyles.subtitle}/>
+                        <Card>
+                            <Subheader>Rating Changes in
+                                Recent {this.state.Games.matches.summary.modes['4'].matches_cnt} Games</Subheader>
+                            <Divider/>
+                            <CardText>
+                                {this.state.Games.matches.summary.modes['4'].rating_delta_sum.toFixed(0)}
+                            </CardText>
+                        </Card>
+
+                        <Card>
+                            <Subheader>Avg. Rank in
+                                Recent {this.state.Games.matches.summary.modes['4'].matches_cnt} Games</Subheader>
+                            <Divider/>
+                            <CardText>
+                                {this.state.Games.matches.summary.ranks_avg.toFixed(1)}
+                            </CardText>
+                        </Card>
+
+                        <Card>
+                            <Subheader>Recent {this.state.Games.matches.summary.modes['4'].matches_cnt} Game
+                                Stats</Subheader>
+                            <Divider/>
+                            <GridList
+                                cols={3}
+                                cellHeight="auto"
+                                padding={5}
+                                style={recentGamesSummaryStyles.stats}
+                            >
+                                <GridTile>
+                                    <div>
+                                        <p>
+                                            <b>{(this.state.Games.matches.summary.kills_avg / this.state.Games.matches.summary.deaths_avg).toFixed(2)}
+                                            </b>
+                                            <br/>
+                                            <sub>K/D</sub>
+                                        </p>
+                                    </div>
+                                </GridTile>
+                                <GridTile>
+                                    <div>
+                                        <p>
+                                            <b>{this.state.Games.matches.summary.damage_avg.toFixed(0)}
+                                            </b>
+                                            <br/>
+                                            <sub>Damage</sub>
+                                        </p>
+                                    </div>
+                                </GridTile>
+                                <GridTile>
+                                    <div>
+                                        <p>
+                                            <b>{Math.floor(this.state.Games.matches.summary.time_survived_avg / 60)}:{Math.floor(this.state.Games.matches.summary.time_survived_avg % 60)} minutes
+                                            </b>
+                                            <br/>
+                                            <sub>Survived time</sub>
+                                        </p>
+                                    </div>
+                                </GridTile>
+                            </GridList>
+                        </Card>
+                    </Card> :
+                    <Card>
                         <CardText>
-                            {this.state.Games.matches.summary.modes['4'].rating_delta_sum.toFixed(0)}
+                            No games played, no stats.
                         </CardText>
                     </Card>
-
-                    <Card>
-                        <Subheader>Avg. Rank in
-                            Recent {this.state.Games.matches.summary.modes['4'].matches_cnt} Games</Subheader>
-                        <Divider/>
-                        <CardText>
-                            {this.state.Games.matches.summary.ranks_avg.toFixed(1)}
-                        </CardText>
-                    </Card>
-
-                    <Card>
-                        <Subheader>Recent {this.state.Games.matches.summary.modes['4'].matches_cnt} Game
-                            Stats</Subheader>
-                        <Divider/>
-                        <GridList
-                            cols={3}
-                            cellHeight="auto"
-                            padding={5}
-                            style={recentGamesSummaryStyles.stats}
-                        >
-                            <GridTile>
-                                <div>
-                                    <p>
-                                        <b>{(this.state.Games.matches.summary.kills_avg / this.state.Games.matches.summary.deaths_avg).toFixed(2)}
-                                        </b>
-                                        <br/>
-                                        <sub>K/D</sub>
-                                    </p>
-                                </div>
-                            </GridTile>
-                            <GridTile>
-                                <div>
-                                    <p>
-                                        <b>{this.state.Games.matches.summary.damage_avg.toFixed(0)}
-                                        </b>
-                                        <br/>
-                                        <sub>Damage</sub>
-                                    </p>
-                                </div>
-                            </GridTile>
-                            <GridTile>
-                                <div>
-                                    <p>
-                                        <b>{Math.floor(this.state.Games.matches.summary.time_survived_avg / 60)}:{Math.floor(this.state.Games.matches.summary.time_survived_avg % 60)} minutes
-                                        </b>
-                                        <br/>
-                                        <sub>Survived time</sub>
-                                    </p>
-                                </div>
-                            </GridTile>
-                        </GridList>
-                    </Card>
-                </Card>
+                }
 
                 {/* Recent Games List (max 20) CONTINUE HERE */}
                 <Card>
@@ -230,19 +236,208 @@ class RecentGames extends Component {
                     <Divider/>
 
                     {/* Games List (max 20) */}
-                    {this.state.Games.matches.items.map((match) =>
-                        <Card key={match.match_id}>
-                            <div>
-                                Mode: {match.mode}
-                            </div>
-                            <div>
-                                Queue Size: {match.queue_size}
-                            </div>
-                            <div>
-                                Rank: {match.participant.stats.rank}/{match.total_rank}
-                            </div>
-                        </Card>
-                    )}
+                    <Subheader
+                        style={{fontSize: 20}}>The data will be refreshed once the winner is determined.</Subheader>
+                    {this.state.Games.matches.items ?
+                        <div>
+                            {this.state.Games.matches.items.map((match, index) =>
+                                <Card key={match.match_id}>
+                                    {/* Basic Stats */}
+                                    <GridList
+                                        cols={8}
+                                        cellHeight="auto"
+                                        padding={5}
+                                    >
+                                        <Subheader>Game ID: {match.match_id} Mode: {match.mode} Queue
+                                            Size: {match.queue_size} Played on: {match.started_at}</Subheader>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b>{Math.floor(match.participant.stats.combat.time_survived / 60)}:{Math.floor(match.participant.stats.combat.time_survived % 60)} minutes
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Time Survived</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b># {match.participant.stats.rank} / {match.total_rank}
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Rank</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b>{match.participant.stats.rating_delta.toFixed(0)}
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Rating Changed</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b>{match.participant.stats.combat.kda.kills}
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Kills</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b>{match.participant.stats.combat.damage.damage_dealt.toFixed(0)}
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Damage</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b>{(match.participant.stats.combat.distance_traveled.walk_distance + match.participant.stats.combat.distance_traveled.ride_distance).toFixed(0)}
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Distance</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            <div>
+                                                <p>
+                                                    <b>{match.team._id}
+                                                    </b>
+                                                    <br/>
+                                                    <sub>Teammates ID</sub>
+                                                </p>
+                                            </div>
+                                        </GridTile>
+                                        <GridTile>
+                                            {/*<Toggle*/}
+                                            {/*label="More Details"*/}
+                                            {/*defaultToggled={true}*/}
+                                            {/*onToggle={this.handleChange}*/}
+                                            {/*labelPosition="right"*/}
+                                            {/*style={{margin: 20}}*/}
+                                            {/*/>*/}
+                                            <IconMenu
+                                                iconButtonElement={<IconButton
+                                                    iconClassName="fa fa-caret-down"/>}
+                                                anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+                                                targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                                            >
+                                                {/* Detailed Stats Toggle*/}
+                                                <Card>
+                                                    <GridList
+                                                        cols={3}
+                                                        cellHeight="auto"
+                                                        padding={5}
+                                                    >
+                                                        <GridTile>
+                                                            <Subheader>Combat</Subheader>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.damage.damage_dealt.toFixed(0)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Damage</sub>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.kda.kills} ({match.participant.stats.combat.kda.headshot_kills})
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Kills (Headshot)</sub>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.kda.assists}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Assists</sub>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.dbno.knock_downs}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>DBNO</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <Subheader>Distance</Subheader>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{(match.participant.stats.combat.distance_traveled.walk_distance + match.participant.stats.combat.distance_traveled.ride_distance).toFixed(0)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Total Distance</sub>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.distance_traveled.walk_distance.toFixed(0)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Walk Distance</sub>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.distance_traveled.ride_distance.toFixed(0)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Ride Distance</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <Subheader>Survival</Subheader>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.heals} / {match.participant.stats.combat.boosts}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Heals / Boosts</sub>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{match.participant.stats.combat.dbno.revives}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Revives</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                    </GridList>
+                                                </Card>
+                                            </IconMenu>
+                                        </GridTile>
+                                    </GridList>
+                                </Card>
+                            )}
+                        </div> :
+                        <div>
+                            <Card>
+                                <CardText>
+                                    No games played, no stats.
+                                </CardText>
+                            </Card>
+                        </div>
+                    }
                 </Card>
 
 
@@ -263,9 +458,11 @@ class RecentGames extends Component {
 
                 <Card>
                     <CardTitle title='Recent games' subtitle='Subtitles here'
-                               titleStyle={recentGamesSummaryStyles.title} subtitleStyle={recentGamesSummaryStyles.subtitle}/>
+                               titleStyle={recentGamesSummaryStyles.title}
+                               subtitleStyle={recentGamesSummaryStyles.subtitle}/>
                     <CardText style={recentGamesSummaryStyles.stats}>
-                        Include - Rating change, Pie chart of Queue Size (not doing), Avg. Rank, K/D, Damage, Survived time (Done)
+                        Include - Rating change, Pie chart of Queue Size (not doing), Avg. Rank, K/D, Damage, Survived
+                        time (Done)
 
                         - Add 20 match summary (Halfway)
                         - add condition to handle empty match list (NOT DONE YET)
