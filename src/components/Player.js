@@ -177,7 +177,7 @@ class Player extends Component {
     //     this.props.history.push('/');
     // };
 
-    selectServerStats(playerID, server, seasons) {
+    switchServer(server) {
         // console.log('PlayerID: ' + playerID + ' Server:' + server + ' Seasons:' + seasons);
         this.setState({SelectedServer: server});
     }
@@ -251,7 +251,7 @@ class Player extends Component {
                     <div style={serverListStyles.buttonList}>
                         {this.state.Player.profile.servers.map((server) =>
                             <FlatButton key={server.server} label={server.server} onClick={() => {
-                                this.selectServerStats(this.state.Player.profile.id, server.server, this.state.Player.profile.seasons);
+                                this.switchServer(server.server);
                             }}/>
                         )}
                     </div>

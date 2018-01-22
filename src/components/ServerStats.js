@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import SeasonStats from './SeasonStats';
 import RecentPlayedWith from './RecentPlayedWith';
-import RecentGames from './RecentGames';
+import RecentGamesMode from './RecentGamesMode';
 
 // Material UI dependencies - ServerStats
 import FlatButton from 'material-ui/FlatButton';
@@ -46,7 +46,7 @@ class ServerStats extends Component {
 
         this.SeasonStatsComponent = null;
         this.RecentPlayedWithComponent = null;
-        this.RecentGamesComponent = null;
+        this.RecentGamesModeComponent = null;
     }
 
     async componentDidMount() {
@@ -62,7 +62,7 @@ class ServerStats extends Component {
         await this.setState({ComponentLoaded: true});
     }
 
-    switchSeason(playerID, server, season) {
+    switchSeason(season) {
         this.setState({SelectedSeason: season});
     }
 
@@ -80,8 +80,8 @@ class ServerStats extends Component {
                 <RecentPlayedWith key={'RecentPlayedWith' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
                                   season={this.state.SelectedSeason}/>;
 
-            this.RecentGamesComponent =
-                <RecentGames key={'RecentGames' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
+            this.RecentGamesModeComponent =
+                <RecentGamesMode key={'RecentGamesMode' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
                              season={this.state.SelectedSeason}/>;
         }
 
@@ -95,7 +95,7 @@ class ServerStats extends Component {
                     <div style={seasonListStyles.buttonList}>
                         {this.state.Seasons.map((season) =>
                             <FlatButton key={season.season} label={season.season} onClick={() => {
-                                this.switchSeason(this.state.ID, this.state.Server, season.season)
+                                this.switchSeason(season.season)
                             }}/>
                         )}
                     </div>
@@ -115,8 +115,8 @@ class ServerStats extends Component {
                 {/* Recent Played With Component */}
                 {this.RecentPlayedWithComponent}
 
-                {/* Recent Games (20) Component */}
-                {this.RecentGamesComponent}
+                {/* Recent Games Mode (20) Component */}
+                {this.RecentGamesModeComponent}
             </div>
         );
     }

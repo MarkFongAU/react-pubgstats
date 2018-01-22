@@ -9,6 +9,7 @@ const Player = require('./routes/Player');
 const SeasonStats = require('./routes/SeasonStats');
 const RecentPlayedWith = require('./routes/RecentPlayedWith');
 const RecentGames = require('./routes/RecentGames');
+const Matches = require('./routes/Matches');
 
 const app = express();
 
@@ -30,7 +31,7 @@ app.use('/player', Player); // Direct to routes/Player.js
 app.use('/seasonstats', SeasonStats); // Direct to routes/SeasonStats.js
 app.use('/recentplayedwith', RecentPlayedWith); // Direct to routes/RecentPlayedWith.js
 app.use('/recentgames', RecentGames); // Direct to routes/RecentGames.js
-
+app.use('/matches', Matches); // Direct to routes/Matches.js
 
 // Always return the main index.html, so react-router render the route in the client
 // app.get('*', (req, res) => {
