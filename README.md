@@ -1,4 +1,4 @@
-Pubgstats is a website that displays player's stats from Player's Unknown Battleground. The project is build with ReactJS and the API originates from [PUBG op.gg](https://pubg.op.gg/).
+Pubgstats is a website that displays player's stats from Player's Unknown Battleground. The project is build with Express Node Backend + React Frontend + Material UI framework and the API originates from [PUBG op.gg](https://pubg.op.gg/).
 
 To run the application, open 2 terminals, the first one run `npm install` and `node server` to start the NodeJS server.
  
@@ -26,7 +26,7 @@ Stats Page (Scroll down)
 
 Note: 
 
-1. The Express Node server has been integrated successfully with the React front-end created with [Create React App](https://github.com/facebookincubator/create-react-app). More features will be added soon.
+1. Express Node integrated successfully with the React app created from [Create React App](https://github.com/facebookincubator/create-react-app).
 
 2. Currently there are only a few endpoints to retrieve data from [PUBG op.gg API](https://pubg.op.gg/api):
 
@@ -58,8 +58,6 @@ Returns match details
 - Example: https://pubg.op.gg/api/matches/2U4GBNA0Yml_fdeqrDDqxho56ZwCV4jz6tX-0lvOAlhz7qIPN280fRMwcwmCQ3F1
 ```
 
-3. The search functionality of the website is not working, because I can't find the searching API. Enter `http://localhost:3000/player/59fe3604465dcc0001b82b45` in the browser to view th page.
+3. The search functionality of the website is not working, because I can't find the searching API. Enter `http://localhost:3000/player/59fe3604465dcc0001b82b45` in the browser to view the page.
 
-4. Rendering of new components has been fixed.
-
-5. Functionality 75% done. More to come.
+4. Functionality 100% done. Web appearance will be improved.
