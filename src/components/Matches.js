@@ -28,6 +28,7 @@ class Matches extends Component {
             TeamID: '',
             PlayerStats: [],
             Match: [],
+            TeamIDIndex: '',
             ComponentLoaded: false,
         };
     }
@@ -39,6 +40,7 @@ class Matches extends Component {
         });
     }
 
+    // Async Get Match
     async getMatch(matchID) {
         // /matches/recent?season=2018-01&server=as&queue_size=4&mode=tpp&after=0
         await fetch(`/matches/${matchID}`)
@@ -46,24 +48,9 @@ class Matches extends Component {
                 return res.json();
             })
             .then(data => {
-                // // Server returns empty object due to invalid player ID
-                // if (data.friendList === 'Invalid playerID') {
-                //     console.log('Invalid Player ID');
-                // } else if (data.friendList === 'Invalid server/season') {
-                //     console.log('Invalid server/season');
-                // } else {
-                //     this.setStateAsync({List: data.friendList});
-                //
-                //     // Allow the component to render after the friend list has been loaded
-                //     this.setStateAsync({ComponentLoaded: true});
-                // }
-
                 this.setStateAsync({
                     Match: data.match,
                 });
-
-                // Allow the component to render after the recent games has been loaded
-                this.setStateAsync({ComponentLoaded: true});
             })
             .catch(error => {
                 // Potentially some code for generating an error specific message here
@@ -71,6 +58,7 @@ class Matches extends Component {
             });
     };
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({
             ID: this.props.matchID,
@@ -79,9 +67,28 @@ class Matches extends Component {
         });
 
         await this.getMatch(this.state.ID);
+
+        // Find the Index of the Team ID in the Teams Array
+        await this.getTeamsIndex(this.state.TeamID);
+
+        // Allow the component to render after the recent games has been loaded
+        this.setStateAsync({ComponentLoaded: true});
+
         console.log(this.state.TeamID);
+        console.log(this.state.TeamIDIndex);
         console.log(this.state.PlayerStats);
         console.log(this.state.Match);
+    }
+
+    async getTeamsIndex(teamID) {
+        this.state.Match.teams.map((team, index) => {
+            if (team._id === teamID.toString()) {
+                console.log('Showing' + team._id, teamID);
+                this.setStateAsync({
+                    TeamIDIndex: index,
+                });
+            }
+        })
     }
 
     formUsernameString(team) {
@@ -123,22 +130,6 @@ class Matches extends Component {
             distance += (participant.stats.combat.distance_traveled.walk_distance + participant.stats.combat.distance_traveled.ride_distance);
         });
         return distance / participant_count;
-    }
-
-    displayTeamStat(team) {
-        let string = '';
-        team.participants.map((participant) => {
-            string += <TableRow key={participant._id}>
-                <TableRowColumn>{participant.user.nickname}</TableRowColumn>
-                <TableRowColumn>{participant.stats.combat.kda.kills}</TableRowColumn>
-                <TableRowColumn>{participant.stats.combat.damage.damage_dealt}</TableRowColumn>
-                <TableRowColumn>{participant.stats.combat.kda.assists}</TableRowColumn>
-                <TableRowColumn>{participant.stats.combat.dbno.knock_downs}</TableRowColumn>
-                <TableRowColumn>{participant.stats.combat.distance_traveled.walk_distance + participant.stats.combat.distance_traveled.ride_distance}</TableRowColumn>
-                <TableRowColumn>{participant.stats.combat.time_survived}</TableRowColumn>
-            </TableRow>;
-        });
-        return string;
     }
 
     render() {
@@ -242,7 +233,7 @@ class Matches extends Component {
                     </Tab>
                     <Tab key='total-rank' label='total rank' value='total-rank'>
                         <Card>
-                            <Table>
+                            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
                                 <TableHeader displaySelectAll={false}
                                              adjustForCheckbox={false}>
                                     <TableRow>
@@ -277,9 +268,8 @@ class Matches extends Component {
                     </Tab>
                     <Tab key='team-stats' label='team stats' value='team-stats'>
                         <Card>
-                            <Table>
-                                <TableHeader displaySelectAll={false}
-                                             adjustForCheckbox={false}>
+                            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
+                                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                                     <TableRow>
                                         <TableHeaderColumn>Username</TableHeaderColumn>
                                         <TableHeaderColumn>Kill</TableHeaderColumn>
@@ -291,21 +281,23 @@ class Matches extends Component {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody displayRowCheckbox={false}>
-                                    {this.state.Match.teams.map((team) => {
-                                            if (team._id === this.state.TeamID) this.displayTeamStat(team)
-                                        }
-                                        // {team._id === this.state.TeamID ? team.participants.map((participant) => {
-                                        //     return <TableRow key={participant._id}>
-                                        //         <TableRowColumn>{participant.user.nickname}</TableRowColumn>
-                                        //         <TableRowColumn>{participant.stats.combat.kda.kills}</TableRowColumn>
-                                        //         <TableRowColumn>{participant.stats.combat.damage.damage_dealt}</TableRowColumn>
-                                        //         <TableRowColumn>{participant.stats.combat.kda.assists}</TableRowColumn>
-                                        //         <TableRowColumn>{participant.stats.combat.dbno.knock_downs}</TableRowColumn>
-                                        //         <TableRowColumn>{participant.stats.combat.distance_traveled.walk_distance + participant.stats.combat.distance_traveled.ride_distance}</TableRowColumn>
-                                        //         <TableRowColumn>{participant.stats.combat.time_survived}</TableRowColumn>
-                                        //     </TableRow>
-                                        // }): ''}
-
+                                    {this.state.Match.teams[this.state.TeamIDIndex].participants.map((participant) =>
+                                        <TableRow key={participant._id}>
+                                            <TableRowColumn>{participant.user.nickname}</TableRowColumn>
+                                            <TableRowColumn>{participant.stats.combat.kda.kills}
+                                            </TableRowColumn>
+                                            <TableRowColumn>{participant.stats.combat.damage.damage_dealt}
+                                            </TableRowColumn>
+                                            <TableRowColumn>{participant.stats.combat.kda.assists}
+                                            </TableRowColumn>
+                                            <TableRowColumn>{participant.stats.combat.dbno.knock_downs}
+                                            </TableRowColumn>
+                                            <TableRowColumn>{(participant.stats.combat.distance_traveled.walk_distance +
+                                                participant.stats.combat.distance_traveled.ride_distance)}
+                                            </TableRowColumn>
+                                            <TableRowColumn>{participant.stats.combat.time_survived}
+                                            </TableRowColumn>
+                                        </TableRow>
                                     )}
                                 </TableBody>
                             </Table>
@@ -318,23 +310,3 @@ class Matches extends Component {
 }
 
 export default Matches;
-
-// let string = '';
-// console.log(team._id);
-//     if (team._id === this.state.TeamID) {
-//         team.participants.map((participant) => {
-//             string += <TableRow key={participant._id}>
-//                 + <TableRowColumn>{participant.user.nickname}</TableRowColumn>
-//                 + <TableRowColumn>{participant.stats.combat.kda.kills}</TableRowColumn>
-//                 + <TableRowColumn>{participant.stats.combat.damage.damage_dealt}</TableRowColumn>
-//                 + <TableRowColumn>{participant.stats.combat.kda.assists}</TableRowColumn>
-//                 + <TableRowColumn>{participant.stats.combat.dbno.knock_downs}</TableRowColumn>
-//                 + <TableRowColumn>{participant.stats.combat.distance_traveled.walk_distance + participant.stats.combat.distance_traveled.ride_distance}</TableRowColumn>
-//                 + <TableRowColumn>{participant.stats.combat.time_survived}</TableRowColumn>
-//                 + </TableRow>;
-//
-//         });
-//     }
-// return string;
-// }
-

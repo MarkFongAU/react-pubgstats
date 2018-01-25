@@ -58,6 +58,7 @@ class GamesSummaryList extends Component {
         });
     }
 
+    // Async Get Recent Games
     async getRecentGames(playerID, server, season, mode, queue_size, after) {
         // /matches/recent?season=2018-01&server=as&queue_size=4&mode=tpp&after=0
         await fetch(`/recentgames/${playerID}/matches/recent?server=${server}&season=${season}&mode=${mode}&queue_size=${queue_size}&after=${after}`)
@@ -81,8 +82,6 @@ class GamesSummaryList extends Component {
                     Games: data.recentGames,
                 });
 
-                // Allow the component to render after the recent games has been loaded
-                this.setStateAsync({ComponentLoaded: true});
             })
             .catch(error => {
                 // Potentially some code for generating an error specific message here
@@ -90,6 +89,7 @@ class GamesSummaryList extends Component {
             });
     };
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({
             ID: this.props.playerID,
@@ -100,24 +100,16 @@ class GamesSummaryList extends Component {
         });
 
         await this.getRecentGames(this.state.ID, this.state.Server, this.state.Season, this.state.Mode, this.state.QueueSize, '');
-        console.log(this.state.Games);
-    }
 
-    loadMatchDetails(mode, queue_size) {
-        // this.setState({SelectedMode: mode, SelectedQueueSize: queue_size});
+        // Allow the component to render after the recent games has been loaded
+        await this.setStateAsync({ComponentLoaded: true});
+
+        console.log(this.state.Games);
     }
 
     render() {
         if (this.state.ComponentLoaded === false)
             return null;
-
-        {/* Render Recent Games */
-        }
-        // if (this.state.SelectedMode) {
-        //     this.GamesSummaryListComponent =
-        //         <GamesSummaryList key={this.state.SelectedServer} playerID={this.state.Player.profile.id}
-        //                           server={this.state.SelectedServer} seasons={this.state.Player.profile.seasons}/>;
-        // }
 
         return (
             <div>
@@ -230,7 +222,7 @@ class GamesSummaryList extends Component {
                                 <Card key={match.match_id}>
                                     {/* Basic Stats */}
                                     <GridList
-                                        cols={8}
+                                        cols={7}
                                         cellHeight="auto"
                                         padding={5}
                                     >
@@ -306,27 +298,18 @@ class GamesSummaryList extends Component {
                                                 </p>
                                             </div>
                                         </GridTile>
-                                        <GridTile>
-                                            {/*<Toggle*/}
-                                            {/*label="More Details"*/}
-                                            {/*defaultToggled={true}*/}
-                                            {/*onToggle={this.handleChange}*/}
-                                            {/*labelPosition="right"*/}
-                                            {/*style={{margin: 20}}*/}
-                                            {/*/>*/}
-                                            <IconMenu
-                                                iconButtonElement={<IconButton
-                                                    iconClassName="fa fa-caret-down"/>}
-                                                anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-                                                targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                                                autoWidth={false}
-                                            >
-                                                {/* Detailed Stats Toggle */}
-                                                <Matches matchID={match.match_id} teamID={match.team._id}
-                                                         player_overallstats={match.participant.stats}/>
-                                            </IconMenu>
-                                        </GridTile>
                                     </GridList>
+                                    {/*<IconMenu*/}
+                                        {/*iconButtonElement={<IconButton*/}
+                                            {/*iconClassName="fa fa-caret-down"/>}*/}
+                                        {/*anchorOrigin={{horizontal: 'left', vertical: 'top'}}*/}
+                                        {/*targetOrigin={{horizontal: 'left', vertical: 'top'}}*/}
+                                        {/*autoWidth={false}*/}
+                                    {/*>*/}
+                                        {/* Detailed Stats Toggle */}
+                                        <Matches matchID={match.match_id} teamID={match.team._id}
+                                                 player_overallstats={match.participant.stats}/>
+                                    {/*</IconMenu>*/}
                                 </Card>
                             )}
                         </div> :

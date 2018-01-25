@@ -72,6 +72,7 @@ class SeasonStats extends Component {
         });
     }
 
+    // Async Get Stats of the Selected Season
     async getSeasonStats(playerID, server, season) {
         await fetch(`/seasonstats/${playerID}/ranked-stats?server=${server}&season=${season}`)
             .then(res => {
@@ -81,9 +82,6 @@ class SeasonStats extends Component {
                 this.setStateAsync({
                     Stats: data.serverSeasonStats,
                 });
-
-                // Allow the component to render after the stats from the season has been loaded
-                this.setStateAsync({ComponentLoaded: true});
 
                 // this.setState({
                 //     Servers: {
@@ -115,6 +113,7 @@ class SeasonStats extends Component {
         // });
     };
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({
             ID: this.props.playerID,
@@ -124,6 +123,9 @@ class SeasonStats extends Component {
 
         await this.getSeasonStats(this.state.ID, this.state.Server, this.state.Season);
         console.log(this.state.Stats);
+
+        // Allow the component to render after the stats from the season has been loaded
+        await this.setStateAsync({ComponentLoaded: true});
     }
 
     render() {
@@ -133,14 +135,12 @@ class SeasonStats extends Component {
         return (
             <div>
                 {/* Season Stats */}
-
                 {/* TPP/FPP Tabs */}
                 <Paper zDepth={1} style={tabStyles.paper}>
                     <Subheader>Season {this.state.Season}</Subheader>
                     <Tabs tabItemContainerStyle={{backgroundColor: green500}}>
                         <Tab key='tpp' label='tpp' value='tpp'>
                             <br/>
-
                             <div>
                                 {this.state.GameMode.tpp.map((mode) =>
                                     <Card key={mode.mode}>
@@ -259,25 +259,10 @@ class SeasonStats extends Component {
                                     </Card>
                                 )}
                             </div>
-
-                            {/* Seasons Tabs */}
-                            {/*<Paper zDepth={1} style={tabStyles.paper}>*/}
-                            {/*<Tabs tabItemContainerStyle={{backgroundColor: purple500}}*/}
-                            {/*onChange={this.tabSeasonChange}>*/}
-                            {/*{this.state.Player.profile.seasons.map((season) =>*/}
-                            {/*<Tab key={season.season} label={season.season}*/}
-                            {/*value={server.season} onActive={() => {*/}
-                            {/*this.tabSeasonChange(season.season)*/}
-                            {/*}}></Tab>*/}
-                            {/*)}*/}
-                            {/*</Tabs>*/}
-                            {/*</Paper>*/}
-
                             <br/>
                         </Tab>
                         <Tab key='fpp' label='fpp' value='fpp'>
                             <br/>
-
                             <div>
                                 {this.state.GameMode.fpp.map((mode) =>
                                     <Card key={mode.mode}>
@@ -396,20 +381,6 @@ class SeasonStats extends Component {
                                     </Card>
                                 )}
                             </div>
-
-                            {/* Seasons Tabs */}
-                            {/*<Paper zDepth={1} style={tabStyles.paper}>*/}
-                            {/*<Tabs tabItemContainerStyle={{backgroundColor: purple500}}*/}
-                            {/*onChange={this.tabSeasonChange}>*/}
-                            {/*{this.state.Player.profile.seasons.map((season) =>*/}
-                            {/*<Tab key={season.season} label={season.season}*/}
-                            {/*value={server.season} onActive={() => {*/}
-                            {/*this.tabSeasonChange(season.season)*/}
-                            {/*}}></Tab>*/}
-                            {/*)}*/}
-                            {/*</Tabs>*/}
-                            {/*</Paper>*/}
-
                             <br/>
                         </Tab>
                     </Tabs>

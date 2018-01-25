@@ -61,7 +61,6 @@ class Player extends Component {
             Player: [],
             ComponentLoaded: false,
             SelectedServer: '',
-            // Servers: [],
             // Servers: {
             //     na: {
             //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
@@ -116,6 +115,7 @@ class Player extends Component {
         });
     }
 
+    // Async Get Player Stats
     async getPlayerStats(playerID) {
         await fetch(`/player/${playerID}`)
             .then(res => {
@@ -128,18 +128,13 @@ class Player extends Component {
                     this.props.history.push('/*');
                 } else {
                     this.setStateAsync({Player: data.player});
-                    // this.setState({Player: data.player});
-                    // console.log(this.state.Player);
-
-                    // Allow the page to render after the player stats has been loaded
-                    this.setStateAsync({ComponentLoaded: true});
                 }
             })
             .catch(error => {
                 // Potentially some code for generating an error specific message here
+                // next(error);
                 console.log('React backend is not available.');
                 this.props.history.push('/*');
-                // next(error);
             });
 
         // Pure Async Await
@@ -148,11 +143,16 @@ class Player extends Component {
         // await this.setStateAsync({Player: data.player});
     };
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({ID: this.props.match.params.id});
         console.log(this.state.ID);
         await this.getPlayerStats(this.state.ID);
         console.log(this.state.Player);
+
+        // Allow the page to render after the player stats has been loaded
+        await this.setStateAsync({ComponentLoaded: true});
+
         // if (!this.state.Player.profile) {
         //     // return;
         // } else {
@@ -168,17 +168,7 @@ class Player extends Component {
         // console.log(this.state.Servers);
     }
 
-    // HandleOnClick = () => {
-    //     console.log("here");
-    //     // return <Redirect to='/'/>;
-    //     // this.props.history.push("/");
-    //     // return <Redirect to="/" push/>;
-    //     // e.preventDefault();
-    //     this.props.history.push('/');
-    // };
-
     switchServer(server) {
-        // console.log('PlayerID: ' + playerID + ' Server:' + server + ' Seasons:' + seasons);
         this.setState({SelectedServer: server});
     }
 

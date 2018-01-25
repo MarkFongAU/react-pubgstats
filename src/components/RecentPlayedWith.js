@@ -34,6 +34,7 @@ class RecentPlayedWith extends Component {
         });
     }
 
+    // Async Get Recently Played List
     async getRecentPlayedWithList(playerID, server, season) {
         await fetch(`/recentplayedwith/${playerID}/matches/summary-played-with?server=${server}&season=${season}`)
             .then(res => {
@@ -47,9 +48,6 @@ class RecentPlayedWith extends Component {
                     console.log('Invalid server/season');
                 } else {
                     this.setStateAsync({List: data.friendList});
-
-                    // Allow the component to render after the friend list has been loaded
-                    this.setStateAsync({ComponentLoaded: true});
                 }
             })
             .catch(error => {
@@ -58,6 +56,7 @@ class RecentPlayedWith extends Component {
             });
     };
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({
             ID: this.props.playerID,
@@ -66,6 +65,9 @@ class RecentPlayedWith extends Component {
         });
         await this.getRecentPlayedWithList(this.state.ID, this.state.Server, this.state.Season);
         console.log(this.state.List);
+
+        // Allow the component to render after the friend list has been loaded
+        await this.setStateAsync({ComponentLoaded: true});
     }
 
     render() {

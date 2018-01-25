@@ -76,6 +76,7 @@ class RecentGamesMode extends Component {
         this.GamesSummaryListComponent = null;
     }
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({
             ID: this.props.playerID,

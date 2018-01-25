@@ -49,13 +49,13 @@ class ServerStats extends Component {
         this.RecentGamesModeComponent = null;
     }
 
+    // Invoked immediately after a component is mounted
     async componentDidMount() {
         await this.setState({
             ID: this.props.playerID,
             Server: this.props.server,
             Seasons: this.props.seasons,
         });
-
         console.log('PlayerID: ' + this.state.ID + ' Server:' + this.state.Server + ' Seasons:' + this.state.Seasons);
 
         // Allow the page to render after the parameters has been loaded
@@ -100,14 +100,6 @@ class ServerStats extends Component {
                         )}
                     </div>
                 </Card>
-
-                {/*<DropDownMenu value={this.state.value} onChange={this.handleChange}>*/}
-                {/*<MenuItem value={1} primaryText="Never" />*/}
-                {/*<MenuItem value={2} primaryText="Every Night" />*/}
-                {/*<MenuItem value={3} primaryText="Weeknights" />*/}
-                {/*<MenuItem value={4} primaryText="Weekends" />*/}
-                {/*<MenuItem value={5} primaryText="Weekly" />*/}
-                {/*</DropDownMenu>*/}
 
                 {/* Season Stats Component*/}
                 {this.SeasonStatsComponent}
