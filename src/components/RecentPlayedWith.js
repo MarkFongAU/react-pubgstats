@@ -2,17 +2,13 @@
  * Components - RecentPlayedWith.js
  */
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom';
 
 // Material UI dependencies - RecentPlayedWith Friend List
-import FlatButton from 'material-ui/FlatButton';
-
 import Subheader from 'material-ui/Subheader';
-import {List, ListItem} from 'material-ui/List';
+import {List} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card} from 'material-ui/Card';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
-import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
 
 // RecentPlayedWith - display player's recent played with friends list
 class RecentPlayedWith extends Component {

@@ -2,22 +2,15 @@
  * Components - Matches.js
  */
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom'
 
 // Material UI dependencies - Matches
-import FlatButton from 'material-ui/FlatButton';
-import IconButton from 'material-ui/IconButton';
-import Toggle from 'material-ui/Toggle';
-import IconMenu from 'material-ui/IconMenu';
-
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Subheader from 'material-ui/Subheader';
-import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
-import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
+import {blue500} from "material-ui/styles/colors";
 
 // Matches - display match details
 class Matches extends Component {
@@ -80,17 +73,21 @@ class Matches extends Component {
         console.log(this.state.Match);
     }
 
+    // Async Get Team Index in the array
     async getTeamsIndex(teamID) {
-        this.state.Match.teams.map((team, index) => {
-            if (team._id === teamID.toString()) {
-                console.log('Showing' + team._id, teamID);
-                this.setStateAsync({
-                    TeamIDIndex: index,
-                });
-            }
-        })
+        this.state.Match.teams
+            .sort((a, b) => a.stats.rank - b.stats.rank)
+            .map((team, index) => {
+                if (team._id === teamID.toString()) {
+                    console.log('Showing' + team._id, teamID);
+                    this.setStateAsync({
+                        TeamIDIndex: index,
+                    });
+                }
+            })
     }
 
+    // Form Team Username string
     formUsernameString(team) {
         let string = '';
         let participant_count = 0;
@@ -106,6 +103,7 @@ class Matches extends Component {
         return string;
     }
 
+    // Calculate Team Total Kill
     calculateTotalKill(team) {
         let totalKills = 0;
         team.participants.map((participant) => {
@@ -114,6 +112,7 @@ class Matches extends Component {
         return totalKills;
     }
 
+    // Calculate Team Total Damage
     calculateTotalDamage(team) {
         let totalDamage = 0;
         team.participants.map((participant) => {
@@ -122,6 +121,7 @@ class Matches extends Component {
         return totalDamage;
     }
 
+    // Calculate Team Average Distance
     calculateAvgDistance(team) {
         let distance = 0;
         let participant_count = 0;
@@ -129,7 +129,7 @@ class Matches extends Component {
             ++participant_count;
             distance += (participant.stats.combat.distance_traveled.walk_distance + participant.stats.combat.distance_traveled.ride_distance);
         });
-        return distance / participant_count;
+        return ((distance / participant_count) / 1000).toFixed(2);
     }
 
     render() {
@@ -141,7 +141,7 @@ class Matches extends Component {
                 {/* Match Details */}
                 <Tabs tabItemContainerStyle={{backgroundColor: blue500}}>
                     <Tab key='overall' label='overall' value='overall'>
-                        <Card>
+                        <div>
                             <GridList
                                 cols={3}
                                 cellHeight="auto"
@@ -149,91 +149,142 @@ class Matches extends Component {
                             >
                                 <GridTile>
                                     <Subheader>Combat</Subheader>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.damage.damage_dealt.toFixed(0)}
-                                            </b>
-                                            <br/>
-                                            <sub>Damage</sub>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.kda.kills} ({this.state.PlayerStats.combat.kda.headshot_kills})
-                                            </b>
-                                            <br/>
-                                            <sub>Kills (Headshot)</sub>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.kda.assists}
-                                            </b>
-                                            <br/>
-                                            <sub>Assists</sub>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.dbno.knock_downs}
-                                            </b>
-                                            <br/>
-                                            <sub>DBNO</sub>
-                                        </p>
-                                    </div>
+                                    <Divider/>
+                                    <Card>
+                                        <CardText>
+                                            <GridList
+                                                cols={2}
+                                                cellHeight="auto"
+                                                padding={5}
+                                            >
+                                                <GridTile>
+                                                    <div>
+                                                        <p>
+                                                            <b>{this.state.PlayerStats.combat.damage.damage_dealt.toFixed(0)}
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Damage</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                                <GridTile>
+                                                    <div>
+                                                        <p>
+                                                            <b>{this.state.PlayerStats.combat.kda.kills} ({this.state.PlayerStats.combat.kda.headshot_kills})
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Kills (Headshot)</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                                <GridTile>
+                                                    <div>
+                                                        <p>
+                                                            <b>{this.state.PlayerStats.combat.kda.assists}
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Assists</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                                <GridTile>
+                                                    <div>
+                                                        <p>
+                                                            <b>{this.state.PlayerStats.combat.dbno.knock_downs}
+                                                            </b>
+                                                            <br/>
+                                                            <sub>DBNO</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                            </GridList>
+                                        </CardText>
+                                    </Card>
                                 </GridTile>
                                 <GridTile>
                                     <Subheader>Distance</Subheader>
-                                    <div>
-                                        <p>
-                                            <b>{(this.state.PlayerStats.combat.distance_traveled.walk_distance + this.state.PlayerStats.combat.distance_traveled.ride_distance).toFixed(0)}
-                                            </b>
-                                            <br/>
-                                            <sub>Total Distance</sub>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.distance_traveled.walk_distance.toFixed(0)}
-                                            </b>
-                                            <br/>
-                                            <sub>Walk Distance</sub>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.distance_traveled.ride_distance.toFixed(0)}
-                                            </b>
-                                            <br/>
-                                            <sub>Ride Distance</sub>
-                                        </p>
-                                    </div>
+                                    <Divider/>
+                                    <Card>
+                                        <CardText>
+                                            <GridList
+                                                cols={2}
+                                                cellHeight="auto"
+                                                padding={5}
+                                            >
+                                                <GridTile cols={2}>
+                                                    <div>
+                                                        <p>
+                                                            <b>{((this.state.PlayerStats.combat.distance_traveled.walk_distance + this.state.PlayerStats.combat.distance_traveled.ride_distance) / 1000).toFixed(2)} km
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Total Distance</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                                <GridTile>
+                                                    <div>
+                                                        <p>
+                                                            <b>{(this.state.PlayerStats.combat.distance_traveled.walk_distance / 1000).toFixed(2)} km
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Walk Distance</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                                <GridTile>
+                                                    <div>
+                                                        <p>
+                                                            <b>{(this.state.PlayerStats.combat.distance_traveled.ride_distance / 1000).toFixed(2)} km
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Ride Distance</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                            </GridList>
+                                        </CardText>
+                                    </Card>
                                 </GridTile>
                                 <GridTile>
                                     <Subheader>Survival</Subheader>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.heals} / {this.state.PlayerStats.combat.boosts}
-                                            </b>
-                                            <br/>
-                                            <sub>Heals / Boosts</sub>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <b>{this.state.PlayerStats.combat.dbno.revives}
-                                            </b>
-                                            <br/>
-                                            <sub>Revives</sub>
-                                        </p>
-                                    </div>
+                                    <Divider/>
+                                    <Card>
+                                        <CardText>
+                                            <GridList
+                                                cols={1}
+                                                cellHeight="auto"
+                                                padding={5}
+                                            >
+                                                <GridTile cols={1}>
+                                                    <div>
+                                                        <p>
+                                                            <b>{this.state.PlayerStats.combat.heals} / {this.state.PlayerStats.combat.boosts}
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Heals / Boosts</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                                <GridTile cols={1}>
+                                                    <div>
+                                                        <p>
+                                                            <b>{this.state.PlayerStats.combat.dbno.revives}
+                                                            </b>
+                                                            <br/>
+                                                            <sub>Revives</sub>
+                                                        </p>
+                                                    </div>
+                                                </GridTile>
+                                            </GridList>
+                                        </CardText>
+                                    </Card>
                                 </GridTile>
                             </GridList>
-                        </Card>
+                        </div>
                     </Tab>
                     <Tab key='total-rank' label='total rank' value='total-rank'>
                         <Card>
-                            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
+                            <Table style={{tableLayout: 'auto'}} fixedHeader={false}>
                                 <TableHeader displaySelectAll={false}
                                              adjustForCheckbox={false}>
                                     <TableRow>
@@ -241,7 +292,7 @@ class Matches extends Component {
                                         <TableHeaderColumn>Username</TableHeaderColumn>
                                         <TableHeaderColumn>Total Kill</TableHeaderColumn>
                                         <TableHeaderColumn>Total Damage</TableHeaderColumn>
-                                        <TableHeaderColumn>Avg Distance</TableHeaderColumn>
+                                        <TableHeaderColumn>Avg Distance (km)</TableHeaderColumn>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody displayRowCheckbox={false}>
@@ -268,7 +319,7 @@ class Matches extends Component {
                     </Tab>
                     <Tab key='team-stats' label='team stats' value='team-stats'>
                         <Card>
-                            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
+                            <Table style={{tableLayout: 'auto'}} fixedHeader={false}>
                                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                                     <TableRow>
                                         <TableHeaderColumn>Username</TableHeaderColumn>
@@ -276,8 +327,8 @@ class Matches extends Component {
                                         <TableHeaderColumn>Damage</TableHeaderColumn>
                                         <TableHeaderColumn>Assists</TableHeaderColumn>
                                         <TableHeaderColumn>DBNO</TableHeaderColumn>
-                                        <TableHeaderColumn>Distance</TableHeaderColumn>
-                                        <TableHeaderColumn>Survived Time</TableHeaderColumn>
+                                        <TableHeaderColumn>Distance (km)</TableHeaderColumn>
+                                        <TableHeaderColumn>Survived Time (minutes)</TableHeaderColumn>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody displayRowCheckbox={false}>
@@ -292,10 +343,10 @@ class Matches extends Component {
                                             </TableRowColumn>
                                             <TableRowColumn>{participant.stats.combat.dbno.knock_downs}
                                             </TableRowColumn>
-                                            <TableRowColumn>{(participant.stats.combat.distance_traveled.walk_distance +
-                                                participant.stats.combat.distance_traveled.ride_distance)}
+                                            <TableRowColumn>{((participant.stats.combat.distance_traveled.walk_distance +
+                                                participant.stats.combat.distance_traveled.ride_distance) / 1000).toFixed(2)}
                                             </TableRowColumn>
-                                            <TableRowColumn>{participant.stats.combat.time_survived}
+                                            <TableRowColumn>{Math.floor(participant.stats.combat.time_survived / 60)}:{(Math.floor(participant.stats.combat.time_survived % 60)) < 10 ? '0' + Math.floor(participant.stats.combat.time_survived % 60) : Math.floor(participant.stats.combat.time_survived % 60)}
                                             </TableRowColumn>
                                         </TableRow>
                                     )}

@@ -52,23 +52,6 @@ router.get('/:id', (clientReq, clientRes)=> {
     async.map(APIMatchRequests, multipleGetRequest, (err, res) => {
         if (err) return console.log(err);
 
-        // // Check for invalid input (playerID, server, season)
-        // if(res[0].users === undefined){
-        //     // Check if the invalid input is for server and season or playerID
-        //     if(res[0].message){
-        //         // Return error message back to the React front-end
-        //         clientRes.send({
-        //             friendList: 'Invalid server/season',
-        //         });
-        //     } else {
-        //         // Return error message object back to the React front-end
-        //         clientRes.send({
-        //             friendList: 'Invalid playerID',
-        //         });
-        //     }
-        //     return;
-        // }
-
         // Match Object
         let match = {
             queue_size: res[0].queue_size,

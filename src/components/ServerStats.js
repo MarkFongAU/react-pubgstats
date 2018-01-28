@@ -2,22 +2,16 @@
  * Components - ServerStats.js
  */
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom'
 import SeasonStats from './SeasonStats';
 import RecentPlayedWith from './RecentPlayedWith';
 import RecentGamesMode from './RecentGamesMode';
 
 // Material UI dependencies - ServerStats
 import FlatButton from 'material-ui/FlatButton';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-
 import Subheader from 'material-ui/Subheader';
-import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
-import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
+import {GridList, GridTile} from 'material-ui/GridList';
+import {Card} from 'material-ui/Card';
 
 // Season list Style
 const seasonListStyles = {
@@ -62,6 +56,7 @@ class ServerStats extends Component {
         await this.setState({ComponentLoaded: true});
     }
 
+    // Select season
     switchSeason(season) {
         this.setState({SelectedSeason: season});
     }
@@ -70,19 +65,22 @@ class ServerStats extends Component {
         if (this.state.ComponentLoaded === false)
             return null;
 
-        {/* Render SeasonStats */}
+        /* Render SeasonStats */
         if (this.state.SelectedSeason) {
             this.SeasonStatsComponent =
-                <SeasonStats key={'SeasonStats' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
+                <SeasonStats key={'SeasonStats' + '-' + this.state.SelectedSeason} playerID={this.state.ID}
+                             server={this.state.Server}
                              season={this.state.SelectedSeason}/>;
 
             this.RecentPlayedWithComponent =
-                <RecentPlayedWith key={'RecentPlayedWith' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
+                <RecentPlayedWith key={'RecentPlayedWith' + '-' + this.state.SelectedSeason} playerID={this.state.ID}
+                                  server={this.state.Server}
                                   season={this.state.SelectedSeason}/>;
 
             this.RecentGamesModeComponent =
-                <RecentGamesMode key={'RecentGamesMode' + '-' + this.state.SelectedSeason} playerID={this.state.ID} server={this.state.Server}
-                             season={this.state.SelectedSeason}/>;
+                <RecentGamesMode key={'RecentGamesMode' + '-' + this.state.SelectedSeason} playerID={this.state.ID}
+                                 server={this.state.Server}
+                                 season={this.state.SelectedSeason}/>;
         }
 
         return (
@@ -104,11 +102,22 @@ class ServerStats extends Component {
                 {/* Season Stats Component*/}
                 {this.SeasonStatsComponent}
 
-                {/* Recent Played With Component */}
-                {this.RecentPlayedWithComponent}
-
-                {/* Recent Games Mode (20) Component */}
-                {this.RecentGamesModeComponent}
+                <Card>
+                    <GridList
+                        cols={3}
+                        cellHeight="auto"
+                        padding={5}
+                    >
+                        <GridTile cols={1}>
+                            {/* Recent Played With Component */}
+                            {this.RecentPlayedWithComponent}
+                        </GridTile>
+                        <GridTile cols={2}>
+                            {/* Recent Games Mode (20) Component */}
+                            {this.RecentGamesModeComponent}
+                        </GridTile>
+                    </GridList>
+                </Card>
             </div>
         );
     }

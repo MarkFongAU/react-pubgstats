@@ -1,15 +1,13 @@
 /**
  * Components - App.js
  */
-import React, {Component} from 'react';
+import React from 'react';
 import Header from './Header';
 import Routes from './routes';
 import Footer from './Footer';
 
 // Material UI dependencies - MuiTheme
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-
 // import logo from './logo.svg';
 // import './App.css';
 
@@ -36,8 +34,7 @@ export default App;
 //     </BrowserRouter>
 // ), document.getElementById('root'));
 
-
-
+// Tutorials
 // https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf FOLLOW THIS
 // https://codesandbox.io/s/vVoQVk78
 
@@ -47,8 +44,6 @@ export default App;
 // http://www.material-ui.com/#/components/grid-list (Material UI)
 
 // USEFUL https://medium.com/@patriciolpezjuri/using-create-react-app-with-react-router-express-js-8fa658bf892d
-
-
 
 // const express = require('express');
 // const path = require('path');

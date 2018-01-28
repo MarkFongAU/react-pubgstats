@@ -10,8 +10,6 @@ import {Link} from 'react-router-dom'
 import {black} from 'material-ui/styles/colors';
 
 import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 
 // Header Style

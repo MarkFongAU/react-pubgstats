@@ -1,19 +1,11 @@
 /**
  * Components - About.js
  */
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-
+import React from 'react';
 import wallpaper from '../image/pubg-man.jpg'
 
-
 // Material UI dependencies - About page
-import FlatButton from 'material-ui/FlatButton';
-
-import {Tabs, Tab} from 'material-ui/Tabs';
-import Slider from 'material-ui/Slider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {Card, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {blue500, white} from 'material-ui/styles/colors';
 
 // About page Style
@@ -21,12 +13,12 @@ const cardStyles = {
     backgroundColor: blue500,
 };
 
-const mediaStyles = {
-    backgroundImage: 'url(' + wallpaper + ')',
-    // backgroundSize: 'cover',
-    // overflow: 'hidden',
-    // backgroundColor: red500,
-};
+// const mediaStyles = {
+//     backgroundImage: 'url(' + wallpaper + ')',
+//     backgroundSize: 'cover',
+//     overflow: 'hidden',
+//     backgroundColor: red500,
+// };
 
 const titleStyles = {
     textAlign: 'center',
@@ -38,13 +30,6 @@ const textStyles = {
     textAlign: 'center',
     color: white,
     fontSize: '20px',
-};
-
-const divStyles = {
-    backgroundImage: 'url(' + wallpaper + ')',
-    backgroundSize: '100%',
-    width: '100%',
-    minHeight: '500px',
 };
 
 const About = () => (
@@ -63,9 +48,6 @@ const About = () => (
             </CardMedia>
         </Card>
     </div>
-    // <div>
-    //     <h1>About PUBG Stat!</h1>
-    // </div>
 );
 
 export default About

@@ -2,29 +2,14 @@
  * Components - SeasonStats.js
  */
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom';
 
 // Material UI dependencies - SeasonStats
-import FlatButton from 'material-ui/FlatButton';
-
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Slider from 'material-ui/Slider';
 import Subheader from 'material-ui/Subheader';
-import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
-import Paper from 'material-ui/Paper';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
-import {red500, green500, lightBlue500, blue500, purple500} from "material-ui/styles/colors";
-
-// TPP/FPP Tab Styles
-const tabStyles = {
-    paper: {
-        width: '98%',
-        margin: 'auto',
-    },
-};
+import {green500} from "material-ui/styles/colors";
 
 // Stats Style
 const statsStyles = {
@@ -82,35 +67,11 @@ class SeasonStats extends Component {
                 this.setStateAsync({
                     Stats: data.serverSeasonStats,
                 });
-
-                // this.setState({
-                //     Servers: {
-                //         ...this.state.Servers,
-                //         [server]: {
-                //             ...this.state.Servers[server],
-                //             [season]: data.serverSeasonStats,
-                //         }
-                //     },
-                // });
-                // console.log(this.state.Servers);
             })
             .catch(error => {
                 // Potentially some code for generating an error specific message here
                 console.log('React backend is not available.');
             });
-
-        // Pure Async Await
-        // const res = await fetch(`/api/users/${playerID}/ranked-stats?server=${server}&season=${season}`);
-        // const data = await res.json();
-        // await this.setStateAsync({
-        //     Servers: {
-        //         ...this.state.Servers,
-        //         [server]: {
-        //             ...this.state.Servers[server],
-        //             [season]: data.serverSeasonStats,
-        //         }
-        //     },
-        // });
     };
 
     // Invoked immediately after a component is mounted
@@ -136,255 +97,274 @@ class SeasonStats extends Component {
             <div>
                 {/* Season Stats */}
                 {/* TPP/FPP Tabs */}
-                <Paper zDepth={1} style={tabStyles.paper}>
+                <Card>
                     <Subheader>Season {this.state.Season}</Subheader>
                     <Tabs tabItemContainerStyle={{backgroundColor: green500}}>
                         <Tab key='tpp' label='tpp' value='tpp'>
                             <br/>
                             <div>
-                                {this.state.GameMode.tpp.map((mode) =>
-                                    <Card key={mode.mode}>
-                                        <CardTitle title={mode.label}/>
-                                        {this.state.Stats[mode.mode].rating ?
-                                            <GridList
-                                                cols={3}
-                                                cellHeight="auto"
-                                                padding={5}
-                                                style={statsStyles.stats}
-                                            >
-                                                <Subheader
-                                                    style={{fontSize: 20}}>Rating: {this.state.Stats[mode.mode].rating},
-                                                    Games
-                                                    Played: {this.state.Stats[mode.mode].matches_cnt}</Subheader>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].win_matches_cnt} /
-                                                                {(this.state.Stats[mode.mode].win_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Wins / Win %</sub>
-                                                        </p>
+                                <GridList
+                                    cols={3}
+                                    cellHeight="auto"
+                                    padding={5}
+                                >
+                                    {this.state.GameMode.tpp.map((mode) =>
+                                        <GridTile key={mode.mode}>
+                                            <CardTitle title={mode.label}/>
+                                            <Divider/>
+                                            <CardText>
+                                                {this.state.Stats[mode.mode].rating ?
+                                                    <GridList
+                                                        cols={3}
+                                                        cellHeight="auto"
+                                                        padding={5}
+                                                        style={statsStyles.stats}
+                                                    >
+                                                        <Subheader
+                                                            style={{fontSize: 20}}>Rating: {this.state.Stats[mode.mode].rating},
+                                                            Games
+                                                            Played: {this.state.Stats[mode.mode].matches_cnt}</Subheader>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].win_matches_cnt} /
+                                                                        {(this.state.Stats[mode.mode].win_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Wins / Win %</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].topten_matches_cnt} /
+                                                                        {(this.state.Stats[mode.mode].topten_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Top 10s / Top 10%</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b># {this.state.Stats[mode.mode].rank_avg.toFixed(1)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Avg. Rank</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{(this.state.Stats[mode.mode].kills_sum / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>K/D</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{(this.state.Stats[mode.mode].headshot_kills_sum / this.state.Stats[mode.mode].kills_sum).toFixed(1)}%
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Headshot %</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].damage_dealt_avg.toFixed(0)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Avg. Damage</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{((this.state.Stats[mode.mode].kills_sum + this.state.Stats[mode.mode].assists_sum) / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>KDA</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].kills_max}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Most Kills</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{Math.floor(this.state.Stats[mode.mode].time_survived_avg / 60)}:{(Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)) < 10 ? '0' + Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60) : Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)} minutes
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Avg. survival
+                                                                        time</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                    </GridList> :
+                                                    <div style={statsStyles.noGamesPlayed}>
+                                                        There is
+                                                        no {mode.label.toLowerCase()} TPP game
+                                                        yet
                                                     </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].topten_matches_cnt} /
-                                                                {(this.state.Stats[mode.mode].topten_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Top 10s / Top 10%</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b># {this.state.Stats[mode.mode].rank_avg.toFixed(1)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Avg. Rank</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{(this.state.Stats[mode.mode].kills_sum / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>K/D</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{(this.state.Stats[mode.mode].headshot_kills_sum / this.state.Stats[mode.mode].kills_sum).toFixed(1)}%
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Headshot %</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].damage_dealt_avg.toFixed(0)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Avg. Damage</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{((this.state.Stats[mode.mode].kills_sum + this.state.Stats[mode.mode].assists_sum) / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>KDA</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].kills_max}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Most Kills</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{Math.floor(this.state.Stats[mode.mode].time_survived_avg / 60)}:{Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)} minutes
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Avg. survival
-                                                                time</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                            </GridList> :
-                                            <CardText style={statsStyles.noGamesPlayed}>
-                                                There is
-                                                no {mode.label.toLowerCase()} TPP game
-                                                yet
+                                                }
                                             </CardText>
-                                        }
-                                    </Card>
-                                )}
+
+                                        </GridTile>
+                                    )}
+                                </GridList>
                             </div>
                             <br/>
                         </Tab>
                         <Tab key='fpp' label='fpp' value='fpp'>
                             <br/>
                             <div>
-                                {this.state.GameMode.fpp.map((mode) =>
-                                    <Card key={mode.mode}>
-                                        <CardTitle title={mode.label}/>
-                                        {this.state.Stats[mode.mode].rating ?
-                                            <GridList
-                                                cols={3}
-                                                cellHeight="auto"
-                                                padding={5}
-                                                style={statsStyles.stats}
-                                            >
-                                                <Subheader
-                                                    style={{fontSize: 20}}>Rating: {this.state.Stats[mode.mode].rating},
-                                                    Games
-                                                    Played: {this.state.Stats[mode.mode].matches_cnt}</Subheader>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].win_matches_cnt} /
-                                                                {(this.state.Stats[mode.mode].win_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Wins / Win %</sub>
-                                                        </p>
+                                <GridList
+                                    cols={3}
+                                    cellHeight="auto"
+                                    padding={5}
+                                >
+                                    {this.state.GameMode.fpp.map((mode) =>
+                                        <GridTile key={mode.mode}>
+                                            <CardTitle title={mode.label}/>
+                                            <Divider/>
+                                            <CardText>
+                                                {this.state.Stats[mode.mode].rating ?
+                                                    <GridList
+                                                        cols={3}
+                                                        cellHeight="auto"
+                                                        padding={5}
+                                                        style={statsStyles.stats}
+                                                    >
+                                                        <Subheader
+                                                            style={{fontSize: 20}}>Rating: {this.state.Stats[mode.mode].rating},
+                                                            Games
+                                                            Played: {this.state.Stats[mode.mode].matches_cnt}</Subheader>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].win_matches_cnt} /
+                                                                        {(this.state.Stats[mode.mode].win_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Wins / Win %</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].topten_matches_cnt} /
+                                                                        {(this.state.Stats[mode.mode].topten_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Top 10s / Top 10%</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b># {this.state.Stats[mode.mode].rank_avg.toFixed(1)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Avg. Rank</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{(this.state.Stats[mode.mode].kills_sum / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>K/D</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{(this.state.Stats[mode.mode].headshot_kills_sum / this.state.Stats[mode.mode].kills_sum).toFixed(1)}%
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Headshot %</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].damage_dealt_avg.toFixed(0)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Avg. Damage</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{((this.state.Stats[mode.mode].kills_sum + this.state.Stats[mode.mode].assists_sum) / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>KDA</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{this.state.Stats[mode.mode].kills_max}
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Most Kills</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                        <GridTile>
+                                                            <div>
+                                                                <p>
+                                                                    <b>{Math.floor(this.state.Stats[mode.mode].time_survived_avg / 60)}:{(Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)) < 10 ? '0' + Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60) : Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)} minutes
+                                                                    </b>
+                                                                    <br/>
+                                                                    <sub>Avg. survival
+                                                                        time</sub>
+                                                                </p>
+                                                            </div>
+                                                        </GridTile>
+                                                    </GridList> :
+                                                    <div style={statsStyles.noGamesPlayed}>
+                                                        There is
+                                                        no {mode.label.toLowerCase()} FPP game
+                                                        yet
                                                     </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].topten_matches_cnt} /
-                                                                {(this.state.Stats[mode.mode].topten_matches_cnt / this.state.Stats[mode.mode].matches_cnt).toFixed(1)} %
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Top 10s / Top 10%</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b># {this.state.Stats[mode.mode].rank_avg.toFixed(1)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Avg. Rank</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{(this.state.Stats[mode.mode].kills_sum / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>K/D</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{(this.state.Stats[mode.mode].headshot_kills_sum / this.state.Stats[mode.mode].kills_sum).toFixed(1)}%
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Headshot %</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].damage_dealt_avg.toFixed(0)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Avg. Damage</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{((this.state.Stats[mode.mode].kills_sum + this.state.Stats[mode.mode].assists_sum) / this.state.Stats[mode.mode].deaths_sum).toFixed(2)}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>KDA</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{this.state.Stats[mode.mode].kills_max}
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Most Kills</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                                <GridTile>
-                                                    <div>
-                                                        <p>
-                                                            <b>{Math.floor(this.state.Stats[mode.mode].time_survived_avg / 60)}:{Math.floor(this.state.Stats[mode.mode].time_survived_avg % 60)} minutes
-                                                            </b>
-                                                            <br/>
-                                                            <sub>Avg. survival
-                                                                time</sub>
-                                                        </p>
-                                                    </div>
-                                                </GridTile>
-                                            </GridList> :
-                                            <CardText style={statsStyles.noGamesPlayed}>
-                                                There is
-                                                no {mode.label.toLowerCase()} FPP game
-                                                yet
+                                                }
                                             </CardText>
-                                        }
-                                    </Card>
-                                )}
+                                        </GridTile>
+                                    )}
+                                </GridList>
                             </div>
                             <br/>
                         </Tab>
                     </Tabs>
-                </Paper>
+                </Card>
             </div>
         );
     }

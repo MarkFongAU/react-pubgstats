@@ -6,12 +6,7 @@ import SearchBar from './SearchBar';
 import wallpaper from '../image/pubg-man.jpg'
 
 // Material UI dependencies - Home page
-import FlatButton from 'material-ui/FlatButton';
-
-import {Tabs, Tab} from 'material-ui/Tabs';
-import Slider from 'material-ui/Slider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {Card, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {red500, white} from 'material-ui/styles/colors';
 
 // Introduction Style
@@ -19,12 +14,12 @@ const cardStyles = {
     backgroundColor: red500,
 };
 
-const mediaStyles = {
-    backgroundImage: 'url(' + wallpaper + ')',
-    // backgroundSize: 'cover',
-    // overflow: 'hidden',
-    // backgroundColor: red500,
-};
+// const mediaStyles = {
+//     backgroundImage: 'url(' + wallpaper + ')',
+//     backgroundSize: 'cover',
+//     overflow: 'hidden',
+//     backgroundColor: red500,
+// };
 
 const titleStyles = {
     textAlign: 'center',

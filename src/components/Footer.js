@@ -1,19 +1,11 @@
 /**
  * Components - Footer.js
  */
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom'
+import React from 'react';
 
 // Material UI dependencies - Footer
 import {grey200} from 'material-ui/styles/colors';
-
-import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import FlatButton from 'material-ui/FlatButton';
-
-import FontIcon from 'material-ui/FontIcon';
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 
 // Footer Style
@@ -27,13 +19,6 @@ const pageStyles = {
     textAlign: 'center',
     padding: '20px',
 };
-//
-// const rightButtons = (
-//     <div>
-//         <FlatButton label="Home" style={buttonStyle} href='/'/>
-//         <FlatButton label="About" style={buttonStyle} href='/about'/>
-//     </div>
-// );
 
 // Footer - Display footer information
 const Footer = () => (

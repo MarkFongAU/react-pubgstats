@@ -38,5 +38,4 @@ app.use('/matches', Matches); // Direct to routes/Matches.js
 //     res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 // });
 
-
 module.exports = app;

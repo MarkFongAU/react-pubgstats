@@ -157,15 +157,6 @@ router.get('/:id', (clientReq, clientRes) => {
                 }
             }
 
-            // // Add the server and season stats object into the player object
-            // player.server_stats = {
-            //     ...player.server_stats,
-            //     [server]: {
-            //         ...player.server_stats[server],
-            //         [season]: serverSeasonStats,
-            //     }
-            // };
-
             // Increment the Async HTTP call counts and check against the expected counts
             completed_async_counts++;
             checkAllAsync(expected_async_counts, completed_async_counts);

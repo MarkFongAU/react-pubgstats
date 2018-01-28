@@ -3,23 +3,14 @@
  */
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom';
-import wallpaper from '../image/pubg-man.jpg'
 import ServerStats from './ServerStats';
 
 // Material UI dependencies - Player profile
 import FlatButton from 'material-ui/FlatButton';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardTitle} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
-
-// Player profile page Style
-const pageStyles = {
-    backgroundImage: 'url(' + wallpaper + ')',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: '100%',
-    width: '100%',
-};
 
 // Lifetime Stats Style
 const lifetimeStyles = {
@@ -61,48 +52,7 @@ class Player extends Component {
             Player: [],
             ComponentLoaded: false,
             SelectedServer: '',
-            // Servers: {
-            //     na: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     as: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     krjp: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     kakao: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     sa: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     eu: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     oc: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            //     sea: {
-            //         pre5: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         pre6: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //         sea1: {tpp1: [], tpp2: [], tpp4: [], fpp1: [], fpp2: [], fpp4: [],},
-            //     },
-            // },
+            // Servers: { na, as, krjp, kakao, sa, eu, oc, sea },
         };
 
         this.ServerStatsComponent = null;
@@ -136,11 +86,6 @@ class Player extends Component {
                 console.log('React backend is not available.');
                 this.props.history.push('/*');
             });
-
-        // Pure Async Await
-        // const res = await fetch(`/api/users/${playerID}`);
-        // const data = await res.json();
-        // await this.setStateAsync({Player: data.player});
     };
 
     // Invoked immediately after a component is mounted
@@ -152,22 +97,9 @@ class Player extends Component {
 
         // Allow the page to render after the player stats has been loaded
         await this.setStateAsync({ComponentLoaded: true});
-
-        // if (!this.state.Player.profile) {
-        //     // return;
-        // } else {
-        //     await Promise.all(this.state.Player.profile.servers.map(async (server) => {
-        //         console.log(server);
-        //         await Promise.all(this.state.Player.profile.seasons.map(async (season) => {
-        //             console.log(season);
-        //             await this.getServerSeasonStats(server.server, season.season);
-        //         }));
-        //     }));
-        // }
-        // //
-        // console.log(this.state.Servers);
     }
 
+    // Select server
     switchServer(server) {
         this.setState({SelectedServer: server});
     }
@@ -187,7 +119,7 @@ class Player extends Component {
             <div>
                 {/* Lifetime Stats */}
                 <Card>
-                    <CardTitle title={this.state.Player.profile.nickname} subtitle={this.state.Player.profile.id}/>
+                    <CardTitle title={this.state.Player.profile.nickname} subtitle={'ID: ' + this.state.Player.profile.id}/>
                     <GridList
                         cols={3}
                         cellHeight="auto"
