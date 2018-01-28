@@ -68,4 +68,6 @@ Returns match details
 
 ![alt text](./src/image/Screenshot-7.jpg)
 
-4. It's not possible to link to another player's profile due to the implementation of player's ID is different in each API endpoint.
+4. It's not possible to link to another player's profile due to the way PUBG op.gg implemented the player's ID differently in each API endpoint. For example, in this matches endpoint, https://pubg.op.gg/api/matches/2U4GBNA0YmkRC6lTqqSoYbNHyMRND3uBdHvtAg3Bzex5WprTokhFILlMwvM2n9a-, the participant ID for rtzW_RED is `5a64d87e4d533a0001799566`, which is totally different from the actual player ID `59fe3604465dcc0001b82b45`.
+
+![alt text](./src/image/Screenshot-8.jpg)
