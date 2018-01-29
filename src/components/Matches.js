@@ -35,7 +35,6 @@ class Matches extends Component {
 
     // Async Get Match
     async getMatch(matchID) {
-        // /matches/recent?season=2018-01&server=as&queue_size=4&mode=tpp&after=0
         await fetch(`/matches/${matchID}`)
             .then(res => {
                 return res.json();

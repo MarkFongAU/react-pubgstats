@@ -19,23 +19,6 @@ const textStyles = {
     fontSize: '18px',
 };
 
-// const titleStyles = {
-//     textAlign: 'center',
-//     color: 'black',
-//     fontSize: '20px',
-// };
-//
-// const searchBarStyles = {
-//     position: 'absolute',
-//     bottom: 0,
-//     width: '100%',
-// };
-//
-// const pageStyles = {
-//     textAlign: 'center',
-//     padding: '20px',
-// };
-
 // SearchBar - Display search bar to search for player profile
 const SearchBar = () => (
     <div>

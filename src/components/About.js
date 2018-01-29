@@ -13,13 +13,6 @@ const cardStyles = {
     backgroundColor: blue500,
 };
 
-// const mediaStyles = {
-//     backgroundImage: 'url(' + wallpaper + ')',
-//     backgroundSize: 'cover',
-//     overflow: 'hidden',
-//     backgroundColor: red500,
-// };
-
 const titleStyles = {
     textAlign: 'center',
     color: white,
