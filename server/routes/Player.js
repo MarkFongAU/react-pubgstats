@@ -17,6 +17,9 @@ router.get('/:id', (clientReq, clientRes) => {
         json: true
     };
 
+    // Server List
+    let serverList = [{server: 'na'}, {server: 'as'}, {server: 'krjp'}, {server: 'kakao'}, {server: 'sa'}, {server: 'eu'}, {server: 'oc'}, {server: 'sea'}];
+
     // Player Object
     let player = {
         profile: [],
@@ -171,12 +174,12 @@ router.get('/:id', (clientReq, clientRes) => {
         let profile = {
             id: res[0]._id,
             nickname: res[0].nickname,
-            servers: res[0].servers,
+            servers: serverList, // New implementation of getting stats via hardcoded server list due to API changes
             seasons: res[0].seasons,
         };
 
         // Check for invalid playerID
-        if(profile.id === undefined){
+        if (profile.id === undefined) {
             // Return the empty player object back to the React front-end
             clientRes.send({
                 player: null,
@@ -190,7 +193,6 @@ router.get('/:id', (clientReq, clientRes) => {
 
         // Count number of Async calls required to get all the lifetime stats of the player
         expected_async_counts = (profile.servers.length) * (profile.seasons.length);
-        // console.log('Expected async counts:' + expected_async_counts);
 
         // Async - GET All Server + Season stats
         async function APIAsync() {

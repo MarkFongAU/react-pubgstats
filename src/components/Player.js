@@ -52,7 +52,8 @@ class Player extends Component {
             Player: [],
             ComponentLoaded: false,
             SelectedServer: '',
-            // Servers: { na, as, krjp, kakao, sa, eu, oc, sea },
+            PreSelectedSeason: '',
+            // Servers: ['na', 'as', 'krjp', 'kakao', 'sa', 'eu', 'oc', 'sea'],
         };
 
         this.ServerStatsComponent = null;
@@ -63,6 +64,13 @@ class Player extends Component {
         return new Promise((resolve) => {
             this.setState(state, resolve)
         });
+    }
+
+    // Get the latest season
+    latestSeason(seasons){
+        let latestSeason = seasons[seasons.length -1].season;
+        console.log(latestSeason);
+        this.setStateAsync({PreSelectedSeason: latestSeason});
     }
 
     // Async Get Player Stats
@@ -94,6 +102,7 @@ class Player extends Component {
         console.log(this.state.ID);
         await this.getPlayerStats(this.state.ID);
         console.log(this.state.Player);
+        await this.latestSeason(this.state.Player.profile.seasons);
 
         // Allow the page to render after the player stats has been loaded
         await this.setStateAsync({ComponentLoaded: true});
@@ -108,18 +117,20 @@ class Player extends Component {
         if (this.state.ComponentLoaded === false)
             return null;
 
-        {/* Render ServerStats */}
+        {/* Render ServerStats */
+        }
         if (this.state.SelectedServer) {
             this.ServerStatsComponent =
                 <ServerStats key={this.state.SelectedServer} playerID={this.state.Player.profile.id}
-                             server={this.state.SelectedServer} seasons={this.state.Player.profile.seasons}/>;
+                             server={this.state.SelectedServer} seasons={this.state.Player.profile.seasons} preSelectedSeason={this.state.PreSelectedSeason}/>;
         }
 
         return (
             <div>
                 {/* Lifetime Stats */}
                 <Card>
-                    <CardTitle title={this.state.Player.profile.nickname} subtitle={'ID: ' + this.state.Player.profile.id}/>
+                    <CardTitle title={this.state.Player.profile.nickname}
+                               subtitle={'ID: ' + this.state.Player.profile.id}/>
                     <GridList
                         cols={3}
                         cellHeight="auto"

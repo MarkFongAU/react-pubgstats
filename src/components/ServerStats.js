@@ -34,7 +34,7 @@ class ServerStats extends Component {
             ID: '',
             Server: '',
             Seasons: [],
-            SelectedSeason: '2018-01',
+            SelectedSeason: '',
             ComponentLoaded: false,
         };
 
@@ -49,6 +49,7 @@ class ServerStats extends Component {
             ID: this.props.playerID,
             Server: this.props.server,
             Seasons: this.props.seasons,
+            SelectedSeason: this.props.preSelectedSeason,
         });
         console.log('PlayerID: ' + this.state.ID + ' Server:' + this.state.Server + ' Seasons:' + this.state.Seasons);
 
