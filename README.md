@@ -1,3 +1,5 @@
+`*IMPORTANT*: The API is currently under maintenance, which unfortunately means the player's stats could not be shown.`
+
 Pubgstats is a website that displays player's stats from Player's Unknown Battleground. The project is build with Express Node Backend + React Frontend + Material UI framework and the API originates from [PUBG op.gg](https://pubg.op.gg/).
 
 To run the application, open 2 terminals, the first one run `npm install` and `node server` to start the NodeJS server.
