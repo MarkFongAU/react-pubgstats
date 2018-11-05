@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "async": "^2.6.0",
-    "express": "^4.16.2",
-    "material-ui": "^0.20.0",
-    "morgan": "^1.9.0",
+    "async": "^2.6.1",
+    "express": "^4.16.4",
+    "material-ui": "^0.20.2",
+    "morgan": "^1.9.1",
     "pubg.op.gg": "0.0.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-router-dom": "^4.2.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.0.17",
-    "request": "^2.83.0"
+    "request": "^2.88.0"
   },
   "scripts": {
     "start": "react-scripts start",
