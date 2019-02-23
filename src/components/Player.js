@@ -171,7 +171,7 @@ class Player extends Component {
                         <GridTile>
                             <div>
                                 <b>K/D</b>
-                                <p>{this.state.Player.lifetime_stats.kd.toFixed(2)}</p>
+                                <p>{this.state.Player.lifetime_stats.kd !== null ? this.state.Player.lifetime_stats.kd.toFixed(2) : null}</p>
                             </div>
                         </GridTile>
                     </GridList>

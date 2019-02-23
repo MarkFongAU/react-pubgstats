@@ -68,6 +68,7 @@ class GamesSummaryList extends Component {
                 return res.json();
             })
             .then(data => {
+                console.log(data.recentGames);
                 this.setStateAsync({
                     Games: data.recentGames,
                 });
@@ -94,6 +95,7 @@ class GamesSummaryList extends Component {
         await this.setStateAsync({ComponentLoaded: true});
 
         console.log(this.state.Games);
+        console.log("Here");
     }
 
     // Convert the UTC time to local time
@@ -109,7 +111,7 @@ class GamesSummaryList extends Component {
         return (
             <div>
                 {/* Recent Games Summary (max 20) */}
-                {this.state.Games.matches.summary.matches_cnt > 0 ?
+                {this.state.Games.matches != null && this.state.Games.matches.summary.matches_cnt > 0 ?
                     <Card>
                         <CardTitle title='Recently Games Summary'
                                    titleStyle={recentGamesSummaryStyles.title}
@@ -217,7 +219,7 @@ class GamesSummaryList extends Component {
                 }
 
                 {/* Recent Games List (max 20) */}
-                {this.state.Games.matches.summary.matches_cnt > 0 ?
+                {this.state.Games.matches != null && this.state.Games.matches.summary.matches_cnt > 0 ?
                     <Card>
                         <CardTitle title='Recently Games'
                                    titleStyle={recentGamesStyles.title}

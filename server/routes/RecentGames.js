@@ -40,6 +40,8 @@ router.get('/:id/matches/recent', (clientReq, clientRes) => {
             'queue_size=' + queue_size + '&' +
             'after=' + after;
 
+        console.log('Options URL: ' + option.url);
+
         return option;
     }
 
@@ -62,11 +64,15 @@ router.get('/:id/matches/recent', (clientReq, clientRes) => {
     async.map(APIRecentGamesRequests, multipleGetRequest, (err, res) => {
         if (err) return console.log(err);
 
+        console.log('Response' + res[0], res);
+
         // Recent Games Object
         let recentGames = {
             params: res[0].params,
             matches: res[0].matches,
         };
+
+        console.log(recentGames);
 
         // Return Recent Games object
         clientRes.send({
