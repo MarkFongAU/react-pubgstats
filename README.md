@@ -1,5 +1,7 @@
 `*IMPORTANT*: The API is currently under maintenance for season 2018-02, which unfortunately means the player's stats for season 2018-02 could not be shown. Srver list has to be hardcoded as the latest API does not return the list of Server's played by a player.`
 
+`*UPDATE 26/02/2019*: The API rate limit has been changed to a limit of 150 request, and it does not seem to reset. Unfortunately, this  means some of the functionality will no longer work. This will be the last maintenance made for this project to prevent the website from breaking.`
+
 Pubgstats is a website that displays player's stats from Player's Unknown Battleground. The project is build with Express Node Backend + React Frontend + Material UI framework and the API originates from [PUBG op.gg](https://pubg.op.gg/).
 
 To run the application, open 2 terminals, the first one run `npm install` and `node server` to start the NodeJS server.
